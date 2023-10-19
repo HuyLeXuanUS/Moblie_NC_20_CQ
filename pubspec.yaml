@@ -91,3 +91,8 @@ flutter:
 
   assets:
     - assets/picture/
+
+  fonts:
+    - family: MyFont  
+      fonts:
+        - asset: assets/fonts/BT-BeauSans-Medium.ttf
