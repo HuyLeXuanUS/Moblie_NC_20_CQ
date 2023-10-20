@@ -46,13 +46,6 @@ class _LoginState extends State<LoginPage> {
                 // Container chứa các widget đăng nhập
                 Container(
                   margin: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color.fromARGB(255, 112, 109, 109), // Màu viền
-                      width: 1.0, // Độ rộng của viền
-                    ),
-                    borderRadius: BorderRadius.circular(20.0), // Bo viền với bán kính 10
-                  ),
                   // Cột thứ nhất: Khung đăng nhập
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),

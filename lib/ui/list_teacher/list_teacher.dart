@@ -103,7 +103,7 @@ class _ListTeacherState extends State<ListTeacherPage>{
                     spacing: 8.0,
                     children: List.generate(5, (index) {
                       return Container(
-                        padding: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10.0),
