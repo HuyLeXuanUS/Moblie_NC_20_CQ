@@ -3,8 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
-import 'package:final_project/ui/teacher_detail/teacher_detail.dart';
 import 'package:final_project/ui/schedule/schedule.dart';
+import 'package:final_project/ui/list_courses/list_course.dart';
+import 'package:final_project/ui/history/history.dart';
 
 
 void main() {runApp(MyApp());}
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -27,11 +28,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0; // Chỉ số của mục đang được chọn
 
   final List<Widget> _pages = [
-    LoginPage(),
     ListTeacherPage(),
-    TeacherDetailPage(),
     SchedulePage(),
-    LoginPage(),
+    HistoryPage(),
+    ListCoursePage(),
+    ListTeacherPage(),
     ListTeacherPage(),
   ];
 
@@ -42,24 +43,24 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Trang chủ',
+            icon: Icon(Icons.co_present),
+            label: 'Gia sư',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Tìm kiếm',
+            icon: Icon(Icons.add_chart),
+            label: 'Lịch học',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Yêu thích',
+            icon: Icon(Icons.history),
+            label: 'Lịch sử',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Giỏ hàng',
+            icon: Icon(Icons.auto_stories),
+            label: 'Khóa học',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Thông báo',
+            icon: Icon(Icons.border_color),
+            label: 'Khóa học của tôi',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

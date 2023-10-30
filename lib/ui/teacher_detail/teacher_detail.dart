@@ -16,8 +16,8 @@ class _TeacherDetailState extends State<TeacherDetailPage>{
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('LetTutor', style: TextStyle(
-                  fontSize: 28,
+            Text('Thông tin gia sư', style: TextStyle(
+                  fontSize: 20,
                   color: Color.fromARGB(255, 3, 117, 210),
                   fontFamily: 'MyFont',
               )

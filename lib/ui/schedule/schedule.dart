@@ -58,7 +58,7 @@ class _ScheduleState extends State<SchedulePage>{
                     ],
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center, // Để canh chỉnh nút theo chiều ngang
+                    crossAxisAlignment: CrossAxisAlignment.stretch, // Để canh chỉnh nút theo chiều ngang
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: () {
