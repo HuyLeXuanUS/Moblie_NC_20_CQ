@@ -6,6 +6,9 @@ import 'package:final_project/ui/list_teacher/list_teacher.dart';
 import 'package:final_project/ui/schedule/schedule.dart';
 import 'package:final_project/ui/list_courses/list_course.dart';
 import 'package:final_project/ui/history/history.dart';
+import 'package:final_project/ui/account/account.dart';
+import 'package:final_project/generated/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 void main() {runApp(MyApp());}
@@ -14,6 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        S.delegate,
+      ],
       home: MyHomePage(),
     );
   }
@@ -33,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HistoryPage(),
     ListCoursePage(),
     ListTeacherPage(),
-    ListTeacherPage(),
+    AccountPage(),
   ];
 
   @override
@@ -44,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.co_present),
-            label: 'Gia sư',
+            label: S.of(context).setting,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_chart),

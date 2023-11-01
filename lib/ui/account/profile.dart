@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:video_player/video_player.dart';
 
 // Màn hình chi tiết khóa học
 class CourseDetailPage extends StatefulWidget{
