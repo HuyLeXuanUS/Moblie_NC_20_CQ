@@ -49,7 +49,7 @@ class _CourseDetailState extends State<CourseDetailPage>{
                     height: 200,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/picture/bg_login.jpg'),
+                        image: AssetImage('assets/pic/bg_login.jpg'),
                         fit: BoxFit.cover, // Làm cho hình ảnh lấp đầy và không cắt bất kỳ phần nào
                       ),
                       borderRadius: BorderRadius.circular(10.0),

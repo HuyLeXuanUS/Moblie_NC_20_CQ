@@ -95,7 +95,7 @@ flutter:
   generate: true
 
   assets:
-    - assets/picture/
+    - assets/pic/
 
   fonts:
     - family: MyFont

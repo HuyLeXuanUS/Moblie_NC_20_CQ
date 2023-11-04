@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as htmlParser;
+// import 'package:http/http.dart' as http;
+// import 'package:html/parser.dart' as htmlParser;
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
 import 'package:final_project/ui/schedule/schedule.dart';
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.co_present),
-            label: S.of(context).setting,
+            label: 'Gia sư',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_chart),

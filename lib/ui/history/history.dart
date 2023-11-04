@@ -6,7 +6,7 @@ class HistoryPage extends StatefulWidget{
 }
 
 class _HistoryState extends State<HistoryPage>{
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Scrollbar(
@@ -14,12 +14,11 @@ class _HistoryState extends State<HistoryPage>{
           itemCount: 10, // Số lượng mục trong danh sách
           itemBuilder: (BuildContext context, int index) {
             // Thay đổi dữ liệu tại đây để phù hợp với nội dung mục
-            String date = DateTime.now().toString(); // Dòng 1: DateTime
+            String date = getDate(DateTime.now()); // Dòng 1: DateTime
             //String avatarUrl = 'https://example.com/avatar.png'; // Đường dẫn ảnh đại diện
-            String name = 'Người dùng'; // Dòng 2: Tên người dùng
-            String subtitle1 = 'Dòng 2 - Dòng 1'; // Dòng 2: Dòng 1
-            String subtitle2 = 'Dòng 2 - Dòng 2'; // Dòng 2: Dòng 2
-            String expansionTitle = 'Tiêu đề mở rộng'; // Dòng 3: Expansion Title
+            String name = 'Tên giảng viên'; // Dòng 2: Tên người dùng
+            String nationality = 'Quốc tịch'; // Dòng 2: Dòng 1
+            String expansionTitle = 'Yêu cầu buổi học'; // Dòng 3: Expansion Title
 
             return Container(
               margin: EdgeInsets.all(8.0),
@@ -39,51 +38,61 @@ class _HistoryState extends State<HistoryPage>{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(date, style: const TextStyle(fontSize: 18.0)), // Dòng 1: DateTime
+                  Text(date, style: const TextStyle(fontSize: 18.0)), 
+                  Text("Giờ học: 10:00 - 11:00", style: const TextStyle(fontSize: 18.0)), 
+                  SizedBox(height: 16.0),
                   Row(
                     children: <Widget>[
                       CircleAvatar(
                         //backgroundImage: NetworkImage(avatarUrl),
                         radius: 30.0, // Cột 1: Avatar
                       ),
-                      const SizedBox(width: 16.0),
+                      SizedBox(width: 16.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(name, style: const TextStyle(fontSize: 18.0)), // Cột 2: Dòng 1
-                          Text(subtitle1), // Cột 2: Dòng 2
-                          Text(subtitle2), // Cột 2: Dòng 3
+                          Text(name, style: const TextStyle(fontSize: 18.0)), 
+                          SizedBox(height: 8.0),
+                          Text(nationality), 
                         ],
                       ),
                     ],
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center, // Để canh chỉnh nút theo chiều ngang
+                  SizedBox(height: 16.0),
+                  ExpansionTile(
+                    title: Text(expansionTitle), 
                     children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          // Xử lý khi nút được nhấn
-                        },
-                        child: const Text('Nút 1'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Xử lý khi nút được nhấn
-                        },
-                        child: const Text('Nút 2'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Xử lý khi nút được nhấn
-                        },
-                        child: const Text('Nút 3'),
-                      ),
+                      // Nội dung mở rộng (nếu có)
                     ],
                   ),
                   ExpansionTile(
-                    title: Text(expansionTitle), // Dòng 3: Expansion Title
+                    title: Text("Đánh giá của gia sư"), 
                     children: <Widget>[
                       // Nội dung mở rộng (nếu có)
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Rating:', 
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Icon(Icons.star, color: Colors.yellow, size: 18),
+                      Icon(Icons.star, color: Colors.yellow, size: 18),
+                      Icon(Icons.star, color: Colors.yellow, size: 18),
+                      Icon(Icons.star, color: Colors.yellow, size: 18),
+                      Icon(Icons.star, color: Colors.yellow, size: 18),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch, 
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          // Xử lý khi nút được nhấn
+                        },
+                        child: const Text('Đánh giá buổi học'),
+                      ),
                     ],
                   ),
                 ],
@@ -93,5 +102,17 @@ class _HistoryState extends State<HistoryPage>{
         ),
       ),
     );
+  }
+
+  String getTime(DateTime dateTime){
+    String formattedDate = "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year.toString()}"; // Định dạng ngày
+    String formattedTime = "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}"; // Định dạng giờ và phút
+    String result = formattedTime + "   " + formattedDate; // Ghép lại giờ và ngày thành chuỗi
+    return result;
+  }
+
+  String getDate(DateTime dateTime){
+    String result = "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year.toString()}"; // Định dạng ngày
+    return result;
   }
 }

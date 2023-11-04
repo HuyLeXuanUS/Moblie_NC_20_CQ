@@ -1,5 +1,5 @@
-import 'package:final_project/ui/account/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:final_project/ui/account/setting.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _AccountPageState extends State<AccountPage> {
               children: <Widget>[
                 CircleAvatar(
                   radius: 40,
-                  backgroundImage: AssetImage('assets/picture/bg_login.jpg'), // Đặt hình ảnh avatar ở đây
+                  backgroundImage: AssetImage('assets/pic/bg_login.jpg'), // Đặt hình ảnh avatar ở đây
                 ),
                 SizedBox(width: 10),
                 Text('Tên của bạn', style: TextStyle(fontSize: 18)),

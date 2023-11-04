@@ -16,7 +16,7 @@ class _LoginState extends State<LoginPage> {
       body:  Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/picture/bg_login.jpg"),
+            image: AssetImage("assets/pic/bg_login.jpg"),
             fit: BoxFit.cover, // Cách ảnh bề mặt container
           ),
         ),
@@ -28,7 +28,7 @@ class _LoginState extends State<LoginPage> {
             Container(
               margin: EdgeInsets.only(top: 60.0), // Điều chỉnh khoảng cách từ trên xuống
               child: Image.asset(
-                "assets/picture/icon_lettutor.png",
+                "assets/pic/icon_lettutor.png",
                 width: 150, // Điều chỉnh kích thước ảnh
                 height: 150,
               ),
@@ -157,7 +157,7 @@ class _LoginState extends State<LoginPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0), // Điều chỉnh khoảng cách giữa biểu tượng và vòng tròn
                             child: Image.asset(
-                              'assets/picture/icon_google.png', // Thay đường dẫn bằng tên tệp PNG của biểu tượng
+                              'assets/pic/icon_google.png', // Thay đường dẫn bằng tên tệp PNG của biểu tượng
                               width: 40, // Điều chỉnh kích thước của biểu tượng
                               height: 40,
                             ),
