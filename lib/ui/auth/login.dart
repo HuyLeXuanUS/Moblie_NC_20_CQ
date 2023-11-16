@@ -1,5 +1,7 @@
+import 'package:final_project/main.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:final_project/services/api/api_auth.dart';
+import 'package:final_project/services/models/user_model.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,229 +15,220 @@ class _LoginState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/pic/bg_login.jpg"),
-            fit: BoxFit.cover, // Cách ảnh bề mặt container
+      body:  SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/pic/bg_login.jpg"),
+              fit: BoxFit.cover, 
+            ),
+          ),
+          child: 
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 60.0), 
+                child: Image.asset(
+                  "assets/pic/icon_lettutor.png",
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+                const Text(
+                "Lettutor",
+                style: TextStyle(
+                  fontSize: 35, 
+                  color: Color.fromARGB(255, 7, 81, 208),
+                  fontFamily: "MyFont",
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('ĐỊA CHỈ EMAIL',),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              hintText: 'mail@example.com',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0), // Viền bo tròn
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('MẬT KHẨU'),
+                          const SizedBox(height: 5), 
+                          TextField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0), // Viền bo tròn
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          onPressed: () {
+                            // Xử lí sự kiện quên mật khẩu
+                          },
+                          child: const Text('Quên mật khẩu?'),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 40, 
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0), // Bo tròn góc
+                          color: Color.fromARGB(255, 3, 117, 210), // Màu nền
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            // Xử lí sự kiện khi nút được nhấn
+                            if (emailController.text == '' ||
+                                passwordController.text == '') {
+                              setState(() {
+                                // isSuccess = false;
+                                // message = lang.emptyField;
+                              });
+                            // } else if (!validateEmail(emailController.text)) {
+                            //   setState(() {
+                            //     isSuccess = false;
+                            //     message = lang.invalidEmail;
+                            //   });
+                            } else {
+                              var response = await AuthFunctions.login(
+                                  User(emailController.text, passwordController.text));
+                              if (response['isSuccess'] == false) {
+                                setState(() {
+                                  // isSuccess = response['isSuccess'] as bool;
+                                  // message = response['message'] as String;
+                                });
+                              } else {
+                                if (!mounted) return;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()),
+                                );
+                              }
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              'ĐĂNG NHẬP',
+                              style: TextStyle(
+                                color: Colors.white, // Màu chữ
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text('Hoặc tiếp tục với:',
+                        style: TextStyle(
+                            fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle, 
+                              border: Border.all(
+                                color: Color.fromARGB(255, 3, 117, 210), 
+                                width: 1.0, 
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.facebook, 
+                              color: Color.fromARGB(255, 3, 117, 210), 
+                              size: 40, 
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Container(
+                            width: 50, 
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle, 
+                              border: Border.all(
+                                color: Colors.blue,  
+                                width: 1.0, 
+                              ),
+                              color: null, 
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0), 
+                              child: Image.asset(
+                                'assets/pic/icon_google.png', 
+                                width: 40, 
+                                height: 40,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Container(
+                            width: 50, 
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle, 
+                              border: Border.all(
+                                color: Color.fromARGB(255, 3, 117, 210), 
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.phone_android, 
+                              color: Color.fromARGB(255, 3, 117, 210), 
+                              size: 40, 
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Chưa có tài khoản?", style: TextStyle(fontSize: 16)),
+                          TextButton(
+                            onPressed: () {
+                              // Xử lí sự kiện đăng kí
+                            },
+                            child: Text('Đăng kí',  style: TextStyle(fontSize: 16)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        child: 
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            // Widget icon
-            Container(
-              margin: EdgeInsets.only(top: 60.0), // Điều chỉnh khoảng cách từ trên xuống
-              child: Image.asset(
-                "assets/pic/icon_lettutor.png",
-                width: 150, // Điều chỉnh kích thước ảnh
-                height: 150,
-              ),
-            ),
-            // Widget lettutor
-            Text(
-              "Lettutor",
-              style: TextStyle(
-                fontSize: 35, 
-                color: Color.fromARGB(255, 7, 81, 208),
-                fontFamily: "MyFont",
-              ),
-            ),
-            // Container chứa các widget đăng nhập
-            Container(
-              margin: EdgeInsets.all(8.0),
-              // Cột thứ nhất: Khung đăng nhập
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('ĐỊA CHỈ EMAIL',),
-                        SizedBox(height: 5), // Khoảng cách giữa Text và TextField
-                        TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            hintText: 'mail@example.com',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0), // Viền bo tròn
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('MẬT KHẨU'),
-                        SizedBox(height: 5), // Khoảng cách giữa Text và TextField
-                        TextField(
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            //hintText: 'Nhập địa chỉ email',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0), // Viền bo tròn
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: () {
-                          // Xử lí sự kiện quên mật khẩu
-                        },
-                        child: Text('Quên mật khẩu?'),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 40, // Đặt chiều cao của nút // Đặt chiều rộng là toàn màn hình
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0), // Bo tròn góc
-                        color: Color.fromARGB(255, 3, 117, 210), // Màu nền
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          // Xử lí sự kiện khi nút được nhấn
-                          login(emailController.text, passwordController.text);
-                        },
-                        child: Center(
-                          child: Text(
-                            'ĐĂNG NHẬP',
-                            style: TextStyle(
-                              color: Colors.white, // Màu chữ
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Text('Hoặc tiếp tục với:',
-                      style: TextStyle(
-                          fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center, // Căn chỉnh các biểu tượng giữa
-                      children: [
-                        Container(
-                          width: 50, // Điều chỉnh kích thước của vòng tròn
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle, // Hình dạng vòng tròn
-                            border: Border.all(
-                              color: Color.fromARGB(255, 3, 117, 210), // Màu viền
-                              width: 1.0, // Độ rộng của viền
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.facebook, // Biểu tượng của Facebook
-                            color: Color.fromARGB(255, 3, 117, 210), // Màu biểu tượng
-                            size: 40, // Điều chỉnh kích thước của biểu tượng
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Container(
-                          width: 50, // Điều chỉnh kích thước của vòng tròn
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle, // Hình dạng vòng tròn
-                            border: Border.all(
-                              color: Colors.blue, // Màu viền
-                              width: 1.0, // Độ rộng của viền
-                            ),
-                            color: null, // Màu nền
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0), // Điều chỉnh khoảng cách giữa biểu tượng và vòng tròn
-                            child: Image.asset(
-                              'assets/pic/icon_google.png', // Thay đường dẫn bằng tên tệp PNG của biểu tượng
-                              width: 40, // Điều chỉnh kích thước của biểu tượng
-                              height: 40,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Container(
-                          width: 50, // Điều chỉnh kích thước của vòng tròn
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle, // Hình dạng vòng tròn
-                            border: Border.all(
-                              color: Color.fromARGB(255, 3, 117, 210), // Màu viền
-                              width: 1.0, // Độ rộng của viền
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.phone_android, // Biểu tượng của phone
-                            color: Color.fromARGB(255, 3, 117, 210), // Màu biểu tượng
-                            size: 40, // Điều chỉnh kích thước của biểu tượng
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Chưa có tài khoản?", style: TextStyle(fontSize: 16)),
-                        TextButton(
-                          onPressed: () {
-                            // Xử lí sự kiện đăng kí
-                          },
-                          child: Text('Đăng kí',  style: TextStyle(fontSize: 16)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ), // Thay Placeholder bằng khung đăng nhập thực tế
-            ),                
-          ],
-        ),
-      ),   
+      ),
     );
-  }
-
-  Future<void> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('https://sandbox.api.lettutor.com/auth/login'), // Thay URL bằng URL thực tế của API đăng nhập
-      body: {
-        'email': email,
-        'password': password,
-      },
-    );
-
-    if (response.statusCode.toString() == '200') {
-      // Đăng nhập thành công, lưu trữ token và điều hướng đến trang chính
-      // Lưu trữ token và thông tin người dùng
-      // Navigator.pushReplacementNamed(context, '/home');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Đăng nhập thành công'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } else {
-      // Đăng nhập thất bại, hiển thị thông báo lỗi
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text('Đăng nhập thất bại'),
-      // ));
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Đăng nhập thất bại'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
   }
 }

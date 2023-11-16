@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:html/parser.dart' as htmlParser;
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
 import 'package:final_project/ui/schedule/schedule.dart';
@@ -24,7 +22,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         S.delegate,
       ],
-      home: MyHomePage(),
+      home: LoginPage(),
     );
   }
 }
