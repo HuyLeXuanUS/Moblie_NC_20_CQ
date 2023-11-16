@@ -1,1 +1,1 @@
-String apiUrl = 'sandbox.api.lettutor.com';
+const String apiUrl = 'sandbox.api.lettutor.com';

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/teacher_detail/teacher_detail.dart';
+import 'package:final_project/services/models/tutor_model.dart';
+import 'package:final_project/services/api/api_tutor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ListTeacherPage extends StatefulWidget {
   @override
@@ -7,19 +10,58 @@ class ListTeacherPage extends StatefulWidget {
 }
 
 class _ListTeacherState extends State<ListTeacherPage>{
+  List<Tutor>? tutorList;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTutorList();
+  }
+
+  Future<void> fetchTutorList() async {
+    List<Tutor>? tutors = await TutorFunctions.getTutorList(1);
+
+    if (tutors != null) {
+      setState(() {
+        tutorList = tutors;
+        //
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Token Cleared'),
+              content: Text(tutorList!.length.toString()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        //
+      });
+    } else {
+      // Xử lý khi không lấy được dữ liệu
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 141, 204, 213),
-        title: TextField(
+        backgroundColor: const Color.fromARGB(255, 141, 204, 213),
+        title: const TextField(
           decoration: InputDecoration(
             hintText: 'Nhập tên gia sư...',
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Xử lý sự kiện tìm kiếm
             },
@@ -27,11 +69,11 @@ class _ListTeacherState extends State<ListTeacherPage>{
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
+                const PopupMenuItem(
                   child: Text('Lọc 1'),
                   value: 'filter1',
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   child: Text('Lọc 2'),
                   value: 'filter2',
                 ),
@@ -43,22 +85,27 @@ class _ListTeacherState extends State<ListTeacherPage>{
           ),
         ],
       ),
-      body: Scrollbar(
+      body: tutorList == null
+          ? const Center(
+              child: CircularProgressIndicator(),
+            ) 
+      : Scrollbar(
         child: ListView.builder(
-          itemCount: 10, // Số lượng containers bạn muốn hiển thị
+          itemCount: tutorList!.length,
           itemBuilder: (context, index) {
+            if (tutorList != null && index < tutorList!.length) {
+            Tutor tutor = tutorList![index]; 
             return InkWell(
               onTap: () {
-                // Điều hướng đến trang chi tiết và chuyển dữ liệu liên quan đến giáo viên (thông tin giáo viên) qua tham số.
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => TeacherDetailPage(),//teacherInfo: teacherInfo), // Truyền thông tin giáo viên vào trang chi tiết
+                    builder: (context) => TeacherDetailPage(),
                   ),
                 );
               },
               child: Container(
-                margin: EdgeInsets.all(8.0),
-                padding: EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
@@ -67,35 +114,42 @@ class _ListTeacherState extends State<ListTeacherPage>{
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
-                      offset: Offset(0, 1),
+                      offset: const Offset(0, 1),
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    // Hàng thứ nhất
                     Row(
                       children: [
-                        // Cột 1: Avatar hình tròn
                         Container(
                           width: 80,
                           height: 80,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.blue, // Màu nền avatar
                           ),
-                          child: Center(
-                            child: Text('Avatar'),
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: tutor.avatar.toString(), // Đặt đường dẫn hình ảnh của giáo viên
+                              placeholder: (context, url) => const CircularProgressIndicator(), // Hiển thị một biểu tượng loading khi hình ảnh đang được tải
+                              errorWidget: (context, url, error) => const Icon(Icons.error), // Hiển thị một biểu tượng lỗi nếu có lỗi khi tải hình ảnh
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 16.0),
-                        // Cột 2: Thông tin
+                        const SizedBox(width: 16.0),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Tên Giáo viên $index'),
-                              Text('Quốc tịch'),
+                              Text(
+                                tutor.name.toString(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0, 
+                                ),
+                              ),
+                              Text(tutor.country.toString()),
                               Row(
                                 children: List.generate(5, (index) {
                                   return Icon(Icons.star, color: Colors.yellow);
@@ -104,7 +158,7 @@ class _ListTeacherState extends State<ListTeacherPage>{
                             ],
                           ),
                         ),
-                        SizedBox(width: 16.0),
+                        const SizedBox(width: 16.0),
                         // Cột 3: Icon trái tim
                         InkWell(
                           onTap: () {
@@ -114,14 +168,13 @@ class _ListTeacherState extends State<ListTeacherPage>{
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0),
-                    // Hàng thứ hai: Thẻ text
+                    const SizedBox(height: 16.0),
                     Wrap(
                       spacing: 8.0,
-                      runSpacing: 8.0, // Thêm runSpacing để đặt khoảng cách giữa các dòng
+                      runSpacing: 8.0, 
                       children: List.generate(5, (index) {
                         return Container(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(10.0),
@@ -156,6 +209,7 @@ class _ListTeacherState extends State<ListTeacherPage>{
                 ),
               ),
             );
+            }
           },
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:final_project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/services/api/api_auth.dart';
 import 'package:final_project/services/models/user_model.dart';
+import 'package:final_project/services/api/token_manager.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -97,7 +98,7 @@ class _LoginState extends State<LoginPage> {
                         height: 40, 
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0), // Bo tròn góc
-                          color: Color.fromARGB(255, 3, 117, 210), // Màu nền
+                          color: const Color.fromARGB(255, 3, 117, 210), // Màu nền
                         ),
                         child: InkWell(
                           onTap: () async {
@@ -123,15 +124,17 @@ class _LoginState extends State<LoginPage> {
                                 });
                               } else {
                                 if (!mounted) return;
-                                Navigator.push(
+                                await TokenManager.saveToken(response['token'].toString());                                
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MyHomePage()),
+                                    builder: (context) => MyHomePage(),
+                                  ),
                                 );
                               }
                             }
                           },
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               'ĐĂNG NHẬP',
                               style: TextStyle(
@@ -142,13 +145,13 @@ class _LoginState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Text('Hoặc tiếp tục với:',
+                      const SizedBox(height: 20),
+                      const Text('Hoặc tiếp tục với:',
                         style: TextStyle(
                             fontSize: 15,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -158,17 +161,17 @@ class _LoginState extends State<LoginPage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle, 
                               border: Border.all(
-                                color: Color.fromARGB(255, 3, 117, 210), 
+                                color: const Color.fromARGB(255, 3, 117, 210), 
                                 width: 1.0, 
                               ),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.facebook, 
                               color: Color.fromARGB(255, 3, 117, 210), 
                               size: 40, 
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Container(
                             width: 50, 
                             height: 50,
@@ -189,18 +192,18 @@ class _LoginState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Container(
                             width: 50, 
                             height: 50,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle, 
                               border: Border.all(
-                                color: Color.fromARGB(255, 3, 117, 210), 
+                                color: const Color.fromARGB(255, 3, 117, 210), 
                                 width: 1.0,
                               ),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.phone_android, 
                               color: Color.fromARGB(255, 3, 117, 210), 
                               size: 40, 
@@ -208,16 +211,16 @@ class _LoginState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Chưa có tài khoản?", style: TextStyle(fontSize: 16)),
+                          const Text("Chưa có tài khoản?", style: TextStyle(fontSize: 16)),
                           TextButton(
                             onPressed: () {
                               // Xử lí sự kiện đăng kí
                             },
-                            child: Text('Đăng kí',  style: TextStyle(fontSize: 16)),
+                            child: const Text('Đăng kí',  style: TextStyle(fontSize: 16)),
                           ),
                         ],
                       ),

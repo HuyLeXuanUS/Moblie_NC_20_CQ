@@ -18,9 +18,7 @@ class AuthFunctions{
           }));
 
       if (response.statusCode == 200) {
-        //var storage = const FlutterSecureStorage();
         String token = LoginResponse.fromJson(jsonDecode(response.body)).token;
-        //await storage.write(key: 'accessToken', value: token);
         return {
           'isSuccess': true,
           'token': token,
