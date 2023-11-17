@@ -1,7 +1,7 @@
 import 'package:final_project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/services/api/api_auth.dart';
-import 'package:final_project/services/models/user_model.dart';
+import 'package:final_project/services/models/user/user_model.dart';
 import 'package:final_project/services/api/token_manager.dart';
 
 class LoginPage extends StatefulWidget {

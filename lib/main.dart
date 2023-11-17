@@ -9,6 +9,9 @@ import 'package:final_project/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 
+import 'package:video_player/video_player.dart';
+
+
 void main() {runApp(MyApp());}
 
 class MyApp extends StatelessWidget {
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         S.delegate,
       ],
-      home: LoginPage(),
+      home: MyHomePage(),
     );
   }
 }

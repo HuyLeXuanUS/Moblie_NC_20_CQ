@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
 import 'package:final_project/services/setting/host_api.dart';
-import 'package:final_project/services/models/user_model.dart';
+import 'package:final_project/services/models/user/user_model.dart';
 import 'package:final_project/services/models/http_response_model.dart';
 import 'package:final_project/services/models/login_response_model.dart';
 import 'dart:convert';

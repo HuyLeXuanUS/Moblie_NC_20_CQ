@@ -1,18 +1,72 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/services/api/api_course.dart';
+import 'package:final_project/services/models/course/course_level.dart';
+import 'package:final_project/services/models/course/course_model.dart';
 import 'package:final_project/ui/course_detail/course_detail.dart';
 import 'package:flutter/material.dart';
 
 class ListCoursePage extends StatefulWidget {
+  const ListCoursePage({super.key});
+
   @override
   _ListCourseState createState() => _ListCourseState();
 }
 
 class _ListCourseState extends State<ListCoursePage>{
+  List<Course>? listCourse = List.empty(growable: true);
+
+  ScrollController? _scrollController;
+  int currentPage = 0;
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController!.addListener(_listenerScroll);
+    fetchCourseList();
+  }
+
+  void _listenerScroll() {
+    if (_scrollController!.position.atEdge) {
+      if (_scrollController!.position.pixels != 0) {
+        fetchCourseList();
+      }
+    }
+  }
+
+  Future<void> fetchCourseList() async {
+    if(loading){
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    final dataResponse =
+        await CourseFunctions.getListCourseWithPagination(currentPage + 1, 10);
+
+    if (dataResponse == null) {
+      return;
+    }
+
+    setState(() {
+      if (dataResponse.isNotEmpty){
+        listCourse?.addAll(dataResponse);
+        currentPage += 1;
+        loading = false;
+      }
+    });
+    // Xử lý khi không lấy được dữ liệu
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 141, 204, 213),
-        title: TextField(
+        backgroundColor: const Color.fromARGB(255, 141, 204, 213),
+        title: const TextField(
           decoration: InputDecoration(
             hintText: 'Nhập tên khóa học...',
           ),
@@ -27,11 +81,11 @@ class _ListCourseState extends State<ListCoursePage>{
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
+                const PopupMenuItem(
                   child: Text('Lọc 1'),
                   value: 'filter1',
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   child: Text('Lọc 2'),
                   value: 'filter2',
                 ),
@@ -44,119 +98,112 @@ class _ListCourseState extends State<ListCoursePage>{
         ],
       ),
       body: Scrollbar(
-        child: ListView.separated(
-          itemCount: 4, // Số lượng danh sách
-          separatorBuilder: (BuildContext context, int index) => Divider(), // Tạo đường ngăn cách giữa các danh sách
-          itemBuilder: (BuildContext context, int index) {
-            late String title;
-            if (index == 0) {
-              title = "English For Traveling";
-            } else if (index == 1) {
-              title = "English For Beginners";
-            } else if (index == 2) {
-              title = "Business English";
-            } else if (index == 3) {
-              title = "English For Kids";
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          controller: _scrollController,
+          itemCount: listCourse!.length + 1,
+          itemBuilder: (context, index) {
+            if (index < listCourse!.length) {
+              return _courseItem(context, listCourse![index], index);
             }
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            if (index >= listCourse!.length && (loading)) {
+              Timer(const Duration(milliseconds: 30), () {
+                _scrollController!.jumpTo(
+                  _scrollController!.position.maxScrollExtent,
+                );
+              });
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Center(
+                  child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor),
                 ),
-                ListView.builder(
-                  itemCount: 4, // Số lượng containers bạn muốn hiển thị trong danh sách này
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        // Điều hướng đến trang chi tiết và chuyển dữ liệu liên quan đến khóa học
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CourseDetailPage(),//teacherInfo: teacherInfo), // Truyền thông tin giáo viên vào trang chi tiết
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            // Hàng thứ nhất: Hình ảnh
-                            Container(
-                              width: double.infinity,
-                              height: 200,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/pic/bg_login.jpg'),
-                                  fit: BoxFit.cover, // Làm cho hình ảnh lấp đầy và không cắt bất kỳ phần nào
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            // Hàng thứ hai: Text
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Tên khóa học $index',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            // Hàng thứ ba: Text thông tin
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Thông tin về khóa học $index'),
-                            ),
-                            // Hàng thứ tư: Hai TextButton
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                    'Độ khó',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '·',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Số bài học',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            );
+              );
+            }
+            return const SizedBox();
           },
+        ),
+      ),
+    );
+  }
+
+  InkWell _courseItem(BuildContext context, Course course, int index) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CourseDetailPage(id: course.id),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: course.imageUrl.toString(),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                course.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(course.description),
+            ),
+            // Hàng thứ tư: Hai TextButton
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    course_level[int.parse(course.level)],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Text(
+                    '·',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    course.topics.length.toString()+' '+'Lessons',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

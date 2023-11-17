@@ -1,27 +1,64 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/services/api/api_course.dart';
+import 'package:final_project/services/models/course/course_level.dart';
+import 'package:final_project/services/models/course/course_model.dart';
 import 'package:flutter/material.dart';
-//import 'package:video_player/video_player.dart';
 
 // Màn hình chi tiết khóa học
-class CourseDetailPage extends StatefulWidget{
+class CourseDetailPage extends StatefulWidget {
+  final String id;
+  const CourseDetailPage({super.key, required this.id});
+
   @override
+  // ignore: library_private_types_in_public_api
   _CourseDetailState createState() => _CourseDetailState();
 }
 
-class _CourseDetailState extends State<CourseDetailPage>{
+class _CourseDetailState extends State<CourseDetailPage> {
+  bool loading = false;
+  Course? course;
+
+  @override
+  void initState() {
+    fetchDetailCourse();
+    super.initState();
+  }
+
+  Future<void> fetchDetailCourse() async {
+    setState(() {
+      loading = true;
+    });
+
+    final dataResponse = await CourseFunctions.getCourseById(widget.id);
+    if (dataResponse == null) {
+      return;
+    }
+
+    setState(() {
+      course = dataResponse;
+      loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return (loading)
+    ? const Center(child: CircularProgressIndicator())
+    : course == null
+    ? const SizedBox()
+    : Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 141, 204, 213), // Đặt màu nền thành màu trắng
-        title: Row(
+        backgroundColor: const Color.fromARGB(
+            255, 141, 204, 213),
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Thông tin khóa học', style: TextStyle(
+            Text('Thông tin khóa học',
+                style: TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 3, 117, 210),
                   fontFamily: 'MyFont',
-              )
-            ),
+                )),
           ],
         ),
       ),
@@ -29,7 +66,7 @@ class _CourseDetailState extends State<CourseDetailPage>{
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10.0),
@@ -38,42 +75,48 @@ class _CourseDetailState extends State<CourseDetailPage>{
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 1,
                     blurRadius: 2,
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),
               child: Column(
                 children: [
-                  // Hàng thứ nhất: Hình ảnh
                   Container(
                     width: double.infinity,
                     height: 200,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/pic/bg_login.jpg'),
-                        fit: BoxFit.cover, // Làm cho hình ảnh lấp đầy và không cắt bất kỳ phần nào
-                      ),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: course!.imageUrl.toString(),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  // Hàng thứ hai: Text
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Tên khóa học',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      course!.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
-                  // Hàng thứ ba: Text thông tin
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Mô tả ngắn gọn khóa học'),
-                  ),
-                  // Hàng thứ tư: Hai TextButton
+                    child: Text(course!.description),
+                  ),                           
                   Padding(
-                    padding: EdgeInsets.all(16.0), // Thay đổi giá trị padding tùy ý
+                    padding: const EdgeInsets.all(16.0), 
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch, // Để canh chỉnh nút theo chiều ngang
+                      crossAxisAlignment: CrossAxisAlignment
+                          .stretch, // Để canh chỉnh nút theo chiều ngang
                       children: <Widget>[
                         ElevatedButton(
                           onPressed: () {
@@ -92,45 +135,56 @@ class _CourseDetailState extends State<CourseDetailPage>{
               title: Text('Tổng quan'),
               children: [
                 ListTile(
-                  title: Text('Tại sao bạn nên học khóa học này?'),
-                  subtitle: Text('Mô tả tại sao khóa học này quan trọng.'),
+                  title: Text('❓ Tại sao bạn nên học khóa học này?'),
+                  subtitle: Text(
+                    course!.reason,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
                 ListTile(
-                  title: Text('Bạn có thể làm gì?'),
-                  subtitle: Text('Các khía cạnh cụ thể của khóa học.'),
+                  title: Text('❓ Bạn có thể làm gì?'),
+                  subtitle:
+                    Text(
+                      course!.purpose,
+                      style: const TextStyle(fontSize: 16),
+                    ),
                 ),
               ],
             ),
-            Divider(), // Dùng để tạo đường ngăn cách
-      
+            const Divider(), // Dùng để tạo đường ngăn các
             // Mục Trình độ yêu cầu
             ListTile(
               title: Text('Trình độ yêu cầu'),
-              subtitle: Text('Thông tin về mức độ trình độ yêu cầu của khóa học.'),
+              subtitle: Text(
+                course_level[int.parse(course!.level)],
+                style: const TextStyle(fontSize: 16),
+              ),
             ),
-            Divider(),
-      
+            const Divider(),
             // Mục Thời lượng khóa học
             ListTile(
               title: Text('Thời lượng khóa học'),
-              subtitle: Text('Thông tin về thời lượng và lịch học của khóa học.'),
+              subtitle: Text(
+                  course!.topics.length.toString()+' '+'Lessons',
+                  style: const TextStyle(fontSize: 16),
+                ),
             ),
-            Divider(),
-      
+            const Divider(),
             // Mục Danh sách chủ đề (sử dụng ListView cho danh sách chủ đề)
             ExpansionTile(
               title: Text('Danh sách chủ đề'),
               children: [
                 ListView.builder(
-                  shrinkWrap: true, // Để tránh lỗi vượt quá giới hạn trong ExpansionTile
-                  itemCount: 7, // Số lượng chủ đề
+                  shrinkWrap:
+                      true, // Để tránh lỗi vượt quá giới hạn trong ExpansionTile
+                  itemCount: course!.topics.length, // Số lượng chủ đề
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
                         // Xử lý khi nút được nhấn
                       },
                       child: ListTile(
-                        title: Text('Chủ đề'), // Tên của chủ đề
+                        title: Text((index + 1).toString() + '. '+ course!.topics[index].name), // Tên của chủ đề
                       ),
                     );
                   },
