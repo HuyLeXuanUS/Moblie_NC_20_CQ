@@ -1,114 +1,205 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/services/api/api_schedule.dart';
+import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:flutter/material.dart';
 
 class HistoryPage extends StatefulWidget{
+  const HistoryPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _HistoryState createState() => _HistoryState();
 }
 
 class _HistoryState extends State<HistoryPage>{
-    @override
+  List<BookingInfo>? listHistoryBooking = List.empty(growable: true); 
+
+  ScrollController? _scrollController;
+  int currentPage = 0;
+  bool loading = false;
+
+  String tutorId = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController!.addListener(_listenerScroll);
+    fetchHistoryList();
+  }
+
+  void _listenerScroll() {
+    if (_scrollController!.position.atEdge) {
+      if (_scrollController!.position.pixels != 0) {
+        fetchHistoryList();
+      }
+    }
+  }
+
+  Future<void> fetchHistoryList() async {
+    if(loading){
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+
+    final dataResponse =
+        await ScheduleFunctions.getBookedClass(currentPage + 1, 10);
+
+    if (dataResponse == null) {
+      return;
+    }
+
+    setState(() {
+      if (dataResponse.isNotEmpty){
+        listHistoryBooking?.addAll(dataResponse);
+        currentPage += 1;
+        loading = false;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Scrollbar(
         child: ListView.builder(
-          itemCount: 10, // Số lượng mục trong danh sách
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          controller: _scrollController,
+          itemCount: listHistoryBooking!.length + 1,
           itemBuilder: (BuildContext context, int index) {
-            // Thay đổi dữ liệu tại đây để phù hợp với nội dung mục
-            String date = getDate(DateTime.now()); // Dòng 1: DateTime
-            //String avatarUrl = 'https://example.com/avatar.png'; // Đường dẫn ảnh đại diện
-            String name = 'Tên giảng viên'; // Dòng 2: Tên người dùng
-            String nationality = 'Quốc tịch'; // Dòng 2: Dòng 1
-            String expansionTitle = 'Yêu cầu buổi học'; // Dòng 3: Expansion Title
+            if (index < listHistoryBooking!.length) {
+              String date = getDate(DateTime.fromMillisecondsSinceEpoch(listHistoryBooking![index].createdAtTimeStamp));
+              String timeStart = listHistoryBooking![index].scheduleDetailInfo!.startPeriod.toString();
+              String timeEnd = listHistoryBooking![index].scheduleDetailInfo!.endPeriod.toString(); 
+              String avatarUrl = listHistoryBooking![index].scheduleDetailInfo!.scheduleInfo!.tutorInfo!.avatar.toString();
+              String name = listHistoryBooking![index].scheduleDetailInfo!.scheduleInfo!.tutorInfo!.name.toString();
+              String studentRequest = listHistoryBooking![index].studentRequest.toString();
+              if (studentRequest == "null"){
+                studentRequest = "Không có yêu cầu cho buổi học";
+              }
+              String tutorReview = listHistoryBooking![index].tutorReview.toString();
+              if (tutorReview == "null"){
+                tutorReview = "Không có nhận xét của giáo viên";
+              }
 
-            return Container(
-              margin: EdgeInsets.all(8.0),
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(0, 1),
-                    ),
-                  ],
-                ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(date, style: const TextStyle(fontSize: 18.0)), 
-                  Text("Giờ học: 10:00 - 11:00", style: const TextStyle(fontSize: 18.0)), 
-                  SizedBox(height: 16.0),
-                  Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        //backgroundImage: NetworkImage(avatarUrl),
-                        radius: 30.0, // Cột 1: Avatar
-                      ),
-                      SizedBox(width: 16.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(name, style: const TextStyle(fontSize: 18.0)), 
-                          SizedBox(height: 8.0),
-                          Text(nationality), 
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.0),
-                  ExpansionTile(
-                    title: Text(expansionTitle), 
-                    children: <Widget>[
-                      // Nội dung mở rộng (nếu có)
-                    ],
-                  ),
-                  ExpansionTile(
-                    title: Text("Đánh giá của gia sư"), 
-                    children: <Widget>[
-                      // Nội dung mở rộng (nếu có)
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Rating:', 
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Icon(Icons.star, color: Colors.yellow, size: 18),
-                      Icon(Icons.star, color: Colors.yellow, size: 18),
-                      Icon(Icons.star, color: Colors.yellow, size: 18),
-                      Icon(Icons.star, color: Colors.yellow, size: 18),
-                      Icon(Icons.star, color: Colors.yellow, size: 18),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch, 
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          // Xử lý khi nút được nhấn
-                        },
-                        child: const Text('Đánh giá buổi học'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+              return _historyItem(date, timeStart, timeEnd, avatarUrl, name, studentRequest, tutorReview);
+            }
+            return const SizedBox();            
           },
         ),
       ),
     );
   }
 
-  String getTime(DateTime dateTime){
-    String formattedDate = "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year.toString()}"; // Định dạng ngày
-    String formattedTime = "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}"; // Định dạng giờ và phút
-    String result = formattedTime + "   " + formattedDate; // Ghép lại giờ và ngày thành chuỗi
-    return result;
+  Container _historyItem(String date, String timeStart, String timeEnd, String avatar, String name, String studentRequest, String tutorReview) {
+    return Container(
+            margin: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(date, style: const TextStyle(fontSize: 18.0)), 
+                // ignore: prefer_interpolation_to_compose_strings
+                Text("Giờ học: " + timeStart + " - " + timeEnd, style: const TextStyle(fontSize: 18.0)), 
+                const SizedBox(height: 16.0),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: avatar,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(name, style: const TextStyle(fontSize: 18.0)), 
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                ExpansionTile(
+                  title: const Text("Yêu cầu buổi học"), 
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        studentRequest,
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  title: const Text("Đánh giá của gia sư"), 
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        tutorReview,
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ),
+                  ],
+                ),
+                const Row(
+                  children: [
+                    Text(
+                      'Rating:', 
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Icon(Icons.star, color: Colors.yellow, size: 18),
+                    Icon(Icons.star, color: Colors.yellow, size: 18),
+                    Icon(Icons.star, color: Colors.yellow, size: 18),
+                    Icon(Icons.star, color: Colors.yellow, size: 18),
+                    Icon(Icons.star, color: Colors.yellow, size: 18),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch, 
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        // Xử lý khi nút được nhấn
+                      },
+                      child: const Text('Đánh giá buổi học'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
   }
 
   String getDate(DateTime dateTime){

@@ -11,6 +11,7 @@ class ListCoursePage extends StatefulWidget {
   const ListCoursePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ListCourseState createState() => _ListCourseState();
 }
 
@@ -73,7 +74,7 @@ class _ListCourseState extends State<ListCoursePage>{
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Xử lý sự kiện tìm kiếm
             },
@@ -82,10 +83,12 @@ class _ListCourseState extends State<ListCoursePage>{
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
+                  // ignore: sort_child_properties_last
                   child: Text('Lọc 1'),
                   value: 'filter1',
                 ),
                 const PopupMenuItem(
+                  // ignore: sort_child_properties_last
                   child: Text('Lọc 2'),
                   value: 'filter2',
                 ),
@@ -197,7 +200,7 @@ class _ListCourseState extends State<ListCoursePage>{
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    course.topics.length.toString()+' '+'Lessons',
+                    '${course.topics.length} Lessons',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],

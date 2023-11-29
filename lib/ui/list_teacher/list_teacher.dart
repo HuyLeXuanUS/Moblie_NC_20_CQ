@@ -90,10 +90,12 @@ class _ListTeacherState extends State<ListTeacherPage> {
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
+                  // ignore: sort_child_properties_last
                   child: Text('Lọc 1'),
                   value: 'filter1',
                 ),
                 const PopupMenuItem(
+                  // ignore: sort_child_properties_last
                   child: Text('Lọc 2'),
                   value: 'filter2',
                 ),
