@@ -1,14 +1,10 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import 'dart:convert';
 import 'package:final_project/services/api/token_manager.dart';
 import 'package:final_project/services/models/course/course_caterogy_model.dart';
 import 'package:final_project/services/models/course/course_model.dart';
 import 'package:final_project/services/setting/host_api.dart';
-import 'package:final_project/services/entity/course_list_entity.dart';
-import 'package:final_project/services/log_interceptor.dart';
-
 
 class CourseFunctions {
   static Future<List<Course>?> getListCourseWithPagination(
@@ -92,8 +88,4 @@ class CourseFunctions {
       return null;
     }
   }
-}
-
-class FlutterSecureStorage {
-  const FlutterSecureStorage();
 }

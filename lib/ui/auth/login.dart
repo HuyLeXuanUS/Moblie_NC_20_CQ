@@ -119,12 +119,11 @@ class _LoginState extends State<LoginPage> {
                                   User(emailController.text, passwordController.text));
                               if (response['isSuccess'] == false) {
                                 setState(() {
-                                  // isSuccess = response['isSuccess'] as bool;
-                                  // message = response['message'] as String;
+                                  
                                 });
                               } else {
-                                if (!mounted) return;
-                                await TokenManager.saveToken(response['token'].toString());                                
+                                if (!mounted) return;                                
+                                await TokenManager.saveToken(response['token'].toString());                             
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

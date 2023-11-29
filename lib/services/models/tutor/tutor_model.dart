@@ -1,4 +1,4 @@
-import 'package:final_project/services/models/feedback_model.dart';
+import 'package:final_project/services/models/tutor/feedback_model.dart';
 
 class Tutor {
   final String userId;

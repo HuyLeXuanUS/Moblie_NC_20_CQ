@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/services/api/api_tutor.dart';
 import 'package:final_project/services/models/tutor/tutor_model.dart';
+import 'package:final_project/services/setting/countries_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:video_player/video_player.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:readmore/readmore.dart';
 
 // Màn hình chi tiết giáo viên
@@ -209,12 +209,10 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                       ),
                                       if (tutor?.country?.isNotEmpty ?? false)
                                         if (tutor!.country!.length <= 2)
-                                          Text(
-                                            CountryCode.fromCountryCode(
-                                              tutor!.country!.toUpperCase(),
-                                            ).name ??
-                                            '',
-                                          ),
+                                          if (countryList.containsKey(tutor!.country))
+                                            Text(
+                                              countryList[tutor!.country].toString(),
+                                            ),
                                     ],
                                   ),
                                 ],
@@ -325,65 +323,77 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                           ],
                         ),
                       ),
-                      ExpansionTile(
-                        title: Text('Đánh giá'),
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            itemCount: 6, // Số lượng mục trong danh sách
-                            itemBuilder: (context, index) {
-                              return Container(
-                                padding: EdgeInsets.all(16),
-                                child: Row(
-                                  children: [
-                                    // Cột 1: Avatar
-                                    CircleAvatar(
-                                      radius: 15,
-                                      backgroundImage: AssetImage(
-                                          'assets/pic/bg_login.jpg'), // Đổi thành hình ảnh avatar thực tế
-                                    ),
-                                    SizedBox(
-                                        width: 16), // Khoảng cách giữa hai cột
+                      // ExpansionTile(
+                      //   title: Text('Đánh giá'),
+                      //   children: [
+                      //     ListView.builder(
+                      //       shrinkWrap: true,
+                      //       physics: const ClampingScrollPhysics(),
+                      //       itemCount: tutor!.feedbacks!.length, // Số lượng mục trong danh sách
+                      //       itemBuilder: (context, index) {
+                      //         return Container(
+                      //           padding: const EdgeInsets.all(16),
+                      //           child: Row(
+                      //             children: [
+                      //               // Cột 1: Avatar
+                      //               // Container(
+                      //               //   width: 18,
+                      //               //   height: 18,
+                      //               //   decoration: const BoxDecoration(
+                      //               //     shape: BoxShape.circle,
+                      //               //   ),
+                      //               //   child: ClipOval(
+                      //               //     child: CachedNetworkImage(
+                      //               //       imageUrl: tutor!.feedbacks![index].firstInfo.avatar.toString(),
+                      //               //       placeholder: (context, url) =>
+                      //               //           const CircularProgressIndicator(),
+                      //               //       errorWidget: (context, url, error) =>
+                      //               //           const Icon(Icons.error),
+                      //               //       fit: BoxFit.cover,
+                      //               //     ),
+                      //               //   ),
+                      //               // ),
 
-                                    // Cột 2: Tên, 5 ngôi sao và đánh giá
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Tên người dùng #$index', // Thay thế bằng tên người dùng thực tế
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.star,
-                                                color: Colors.yellow, size: 18),
-                                            Icon(Icons.star,
-                                                color: Colors.yellow, size: 18),
-                                            Icon(Icons.star,
-                                                color: Colors.yellow, size: 18),
-                                            Icon(Icons.star,
-                                                color: Colors.yellow, size: 18),
-                                            Icon(Icons.star,
-                                                color: Colors.yellow, size: 18),
-                                          ],
-                                        ),
-                                        Text(
-                                          'Đánh giá: 5.0', // Thay thế bằng đánh giá thực tế
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                      //               const SizedBox(width: 16), // Khoảng cách giữa hai cột
+
+                      //               // Cột 2: Tên, 5 ngôi sao và đánh giá
+                      //               Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   Text(
+                      //                     'Tên người dùng #$index', // Thay thế bằng tên người dùng thực tế
+                      //                     style: TextStyle(
+                      //                         fontSize: 18,
+                      //                         fontWeight: FontWeight.bold),
+                      //                   ),
+                      //                   Row(
+                      //                     children: [
+                      //                       Icon(Icons.star,
+                      //                           color: Colors.yellow, size: 18),
+                      //                       Icon(Icons.star,
+                      //                           color: Colors.yellow, size: 18),
+                      //                       Icon(Icons.star,
+                      //                           color: Colors.yellow, size: 18),
+                      //                       Icon(Icons.star,
+                      //                           color: Colors.yellow, size: 18),
+                      //                       Icon(Icons.star,
+                      //                           color: Colors.yellow, size: 18),
+                      //                     ],
+                      //                   ),
+                      //                   Text(
+                      //                     'Đánh giá: 5.0', // Thay thế bằng đánh giá thực tế
+                      //                     style: TextStyle(fontSize: 14),
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         );
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:final_project/services/setting/learning_topics.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/teacher_detail/teacher_detail.dart';
 import 'package:final_project/services/models/tutor/tutor_model.dart';
@@ -238,7 +239,7 @@ class _ListTeacherState extends State<ListTeacherPage> {
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            child: Text(e),
+                            child: Text(listLearningTopics[e].toString()),
                           ),
                         )
                         .toList() ??

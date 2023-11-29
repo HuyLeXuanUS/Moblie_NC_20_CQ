@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/services/api/api_course.dart';
-import 'package:final_project/services/models/course/course_level.dart';
+import 'package:final_project/services/setting/course_level.dart';
 import 'package:final_project/services/models/course/course_model.dart';
 import 'package:final_project/ui/course_detail/course_detail.dart';
 import 'package:flutter/material.dart';
