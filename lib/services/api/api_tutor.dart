@@ -55,8 +55,66 @@ class TutorFunctions {
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200) {      
         return Tutor.fromJson2(jsonDecode(response.body));
+      } else {
+        return null;
+      }
+    } on Error catch (_) {
+      return null;
+    }
+  }
+
+  static Future<bool> manageFavoriteTutor(String id) async {
+    try {
+      String? token = await TokenManager.getToken();
+      var url = Uri.https(apiUrl, 'user/manageFavoriteTutor');
+      var response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          body: json.encode({
+            'tutorId': id,
+          }));
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on Error catch (_) {
+      return false;
+    }
+  }
+
+  static Future<List<Tutor>?> searchTutor(
+    int page,
+    int perPage, {
+    String search = '',
+  }) async {
+    try {
+      String? token = await TokenManager.getToken();
+      final Map<String, dynamic> args = {
+        'page': page,
+        'perPage': perPage,
+        'search': search,
+      };
+
+      final url = Uri.https(apiUrl, 'tutor/search');
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: json.encode(args),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonRes = json.decode(response.body);
+        final List<dynamic> tutors = jsonRes["rows"];
+        return tutors.map((tutor) => Tutor.fromJson(tutor)).toList();
       } else {
         return null;
       }

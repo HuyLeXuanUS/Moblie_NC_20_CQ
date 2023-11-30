@@ -20,9 +20,13 @@ class _ListTeacherState extends State<ListTeacherPage> {
   List<Tutor> tutorList = List.empty(growable: true);
   List<String> favoriteList = List.empty(growable: true);
 
+  List<Tutor> filtertutorList = List.empty(growable: true);
+
   ScrollController? _scrollController;
   int currentPage = 0;
   bool loading = false;
+
+  String selectedSpecialities = "All";
 
   @override
   void initState() {
@@ -31,6 +35,7 @@ class _ListTeacherState extends State<ListTeacherPage> {
     _scrollController!.addListener(_listenerScroll);
 
     fetchTutorList();
+    selectedSpecialities= 'All';
   }
 
   void _listenerScroll() {
@@ -62,11 +67,33 @@ class _ListTeacherState extends State<ListTeacherPage> {
       }
       if (tutors.isNotEmpty) {
         tutorList.addAll(tutors);
+        filtertutorList.addAll(getFilterTutorList(tutors, selectedSpecialities));
         currentPage += 1;
         loading = false;
       }
     });
     // Xử lý khi không lấy được dữ liệu
+  }
+
+  void filterList(String type) {
+    setState(() {
+      if (type == 'All') {
+        filtertutorList = List.from(tutorList);
+      } else {
+        filtertutorList =
+            tutorList.where((tutor) => tutor.specialties
+                ?.split(',').map((e) => listLearningTopics[e]).toList().contains(type) == true).toList();     
+      }
+      selectedSpecialities = type;
+    });
+  }
+
+  List<Tutor> getFilterTutorList(List<Tutor> tutorList, String type){
+    if (type == "All"){
+      return tutorList;
+    }
+    return tutorList.where((tutor) => tutor.specialties
+      ?.split(',').map((e) => listLearningTopics[e]).toList().contains(type) == true).toList();
   }
 
   @override
@@ -86,23 +113,20 @@ class _ListTeacherState extends State<ListTeacherPage> {
               // Xử lý sự kiện tìm kiếm
             },
           ),
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Lọc 1'),
-                  value: 'filter1',
-                ),
-                const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Lọc 2'),
-                  value: 'filter2',
-                ),
-              ];
-            },
-            onSelected: (value) {
-              // Xử lý sự kiện lọc
+          DropdownButton<String>(
+            value: selectedSpecialities,
+            padding: const EdgeInsets.only(top: 4),
+            items: ['All', 'STARTERS', 'MOVERS', 'FLYERS', 'KET', 'PET' , 'IELTS',
+             'TOEFL', 'TOEIC', 'Business English', 'English for Kids', 'Conversational English']
+                .map((type) => DropdownMenuItem<String>(
+                      value: type,
+                      child: Text(type, style: const TextStyle(fontSize: 15),),
+                    ))
+                .toList(),
+            onChanged: (String? type) {
+              if (type != null) {
+                filterList(type);
+              }
             },
           ),
         ],
@@ -113,12 +137,12 @@ class _ListTeacherState extends State<ListTeacherPage> {
             parent: BouncingScrollPhysics(),
           ),
           controller: _scrollController,
-          itemCount: tutorList.length + 1,
+          itemCount: filtertutorList.length + 1,
           itemBuilder: (context, index) {
-            if (index < tutorList.length) {
-              return _teacherItem(context, tutorList[index], index);
+            if (index < filtertutorList.length) {
+              return _teacherItem(context, filtertutorList[index], index);
             }
-            if (index >= tutorList.length && (loading)) {
+            if (index >= filtertutorList.length && (loading)) {
               Timer(const Duration(milliseconds: 30), () {
                 _scrollController!.jumpTo(
                   _scrollController!.position.maxScrollExtent,
@@ -144,7 +168,7 @@ class _ListTeacherState extends State<ListTeacherPage> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => TeacherDetailPage(id: tutor.userId),
+            builder: (context) => TeacherDetailPage(id: tutor.userId, listFeedback: tutor.feedbacks),
           ),
         );
       },
@@ -214,7 +238,6 @@ class _ListTeacherState extends State<ListTeacherPage> {
                   ),
                 ),
                 const SizedBox(width: 16.0),
-                // Cột 3: Icon trái tim
                 InkWell(
                   onTap: () {
                     // Xử lý khi người dùng nhấn vào icon trái tim ở đây.
@@ -224,28 +247,28 @@ class _ListTeacherState extends State<ListTeacherPage> {
                         ? Icons.favorite
                         : Icons.favorite_outline,
                     color: Colors.red,
-                  ), // Sử dụng Icon(Icons.favorite) để hiển thị icon đỏ
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 16.0),
             Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: tutor.specialties
-                        ?.split(',')
-                        .map(
-                          (e) => Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Text(listLearningTopics[e].toString()),
-                          ),
-                        )
-                        .toList() ??
-                    []),
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: tutor.specialties
+                ?.split(',')
+                .map(
+                  (e) => Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text(listLearningTopics[e].toString()),
+                  ),
+                )
+                .toList() ??
+            []),
             const SizedBox(height: 16.0),
             Text(
               tutor.bio ?? "",

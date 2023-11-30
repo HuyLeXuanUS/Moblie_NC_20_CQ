@@ -46,6 +46,7 @@ dependencies:
   country_code_picker: ^3.0.0
   readmore: ^2.2.0
   http_interceptor: ^1.0.2
+  filter_list: ^1.0.2
 
 dev_dependencies:
   flutter_test:

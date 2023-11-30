@@ -8,6 +8,7 @@ class Tutor {
   final String? specialties;
   final String? video;
   final String? experience;
+  final String? education;
   final String? languages;
   final String? interests;
   final String? country;
@@ -24,6 +25,7 @@ class Tutor {
       this.rating,
       this.video,
       this.experience,
+      this.education,
       this.languages,
       this.interests,
       this.country,
@@ -56,6 +58,7 @@ class Tutor {
       avatar: json['User']['avatar'],
       name: json['User']['name'],
       country: json['User']['country'],
+      education: json['education'],
       bio: json['bio'],
       specialties: json['specialties'],
       rating: json['rating'],

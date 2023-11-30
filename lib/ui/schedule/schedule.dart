@@ -19,8 +19,6 @@ class _ScheduleState extends State<SchedulePage>{
   int currentPage = 0;
   bool loading = false;
 
-  String tutorId = "";
-
   @override
   void initState() {
     super.initState();
@@ -73,7 +71,7 @@ class _ScheduleState extends State<SchedulePage>{
           itemCount: listBooking!.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index < listBooking!.length) {
-              String date = getDate(DateTime.fromMillisecondsSinceEpoch(listBooking![index].createdAtTimeStamp));
+              String date = getDate(DateTime.fromMillisecondsSinceEpoch(listBooking![index].scheduleDetailInfo!.startPeriodTimestamp));
               String timeStart = listBooking![index].scheduleDetailInfo!.startPeriod.toString();
               String timeEnd = listBooking![index].scheduleDetailInfo!.endPeriod.toString(); 
               // ignore: prefer_interpolation_to_compose_strings
@@ -127,7 +125,7 @@ class _ScheduleState extends State<SchedulePage>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(datetime, style: const TextStyle(fontSize: 18.0)), // Dòng 1: DateTime
+          Text(datetime, style: const TextStyle(fontSize: 18.0)), 
           const SizedBox(height: 16.0),
           Row(
             children: <Widget>[
@@ -152,14 +150,14 @@ class _ScheduleState extends State<SchedulePage>{
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(name, style: const TextStyle(fontSize: 18.0)), // Cột 2: Dòng 1
+                  Text(name, style: const TextStyle(fontSize: 18.0)), 
                 ],
               ),
             ],
           ),
           const SizedBox(height: 16.0),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch, // Để canh chỉnh nút theo chiều ngang
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ElevatedButton(
                 onPressed: () {
@@ -170,7 +168,7 @@ class _ScheduleState extends State<SchedulePage>{
             ],
           ),
           ExpansionTile(
-            title: const Text("Yêu cầu buổi học"), // Dòng 3: Expansion Title
+            title: const Text("Yêu cầu buổi học", style: TextStyle(fontSize: 17.0)), 
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.all(16.0),

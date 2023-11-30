@@ -18,8 +18,6 @@ class _HistoryState extends State<HistoryPage>{
   int currentPage = 0;
   bool loading = false;
 
-  String tutorId = "";
-
   @override
   void initState() {
     super.initState();
@@ -72,7 +70,7 @@ class _HistoryState extends State<HistoryPage>{
           itemCount: listHistoryBooking!.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index < listHistoryBooking!.length) {
-              String date = getDate(DateTime.fromMillisecondsSinceEpoch(listHistoryBooking![index].createdAtTimeStamp));
+              String date = getDate(DateTime.fromMillisecondsSinceEpoch(listHistoryBooking![index].scheduleDetailInfo!.startPeriodTimestamp));
               String timeStart = listHistoryBooking![index].scheduleDetailInfo!.startPeriod.toString();
               String timeEnd = listHistoryBooking![index].scheduleDetailInfo!.endPeriod.toString(); 
               String avatarUrl = listHistoryBooking![index].scheduleDetailInfo!.scheduleInfo!.tutorInfo!.avatar.toString();
@@ -148,7 +146,7 @@ class _HistoryState extends State<HistoryPage>{
                 ),
                 const SizedBox(height: 16.0),
                 ExpansionTile(
-                  title: const Text("Yêu cầu buổi học"), 
+                  title: const Text("Yêu cầu buổi học", style: TextStyle(fontSize: 17.0)), 
                   children: <Widget>[
                     Container(
                       padding: const EdgeInsets.all(16.0),
@@ -161,7 +159,7 @@ class _HistoryState extends State<HistoryPage>{
                   ],
                 ),
                 ExpansionTile(
-                  title: const Text("Đánh giá của gia sư"), 
+                  title: const Text("Đánh giá của gia sư", style: TextStyle(fontSize: 17.0)), 
                   children: <Widget>[
                     Container(
                       padding: const EdgeInsets.all(16.0),
