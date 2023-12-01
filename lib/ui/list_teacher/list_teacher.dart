@@ -18,14 +18,19 @@ class ListTeacherPage extends StatefulWidget {
 
 class _ListTeacherState extends State<ListTeacherPage> {
   List<Tutor> tutorList = List.empty(growable: true);
-  List<String> favoriteList = List.empty(growable: true);
 
-  List<Tutor> filtertutorList = List.empty(growable: true);
+  List<Tutor> filterTutorList = List.empty(growable: true);
+
+  List<Tutor> viewTutorList = List.empty(growable: true);
+  List<String> viewFavoriteTutorList = List.empty(growable: true);
 
   ScrollController? _scrollController;
   int currentPage = 0;
+  int currentPageSearch = 0;
   bool loading = false;
 
+  TextEditingController nameTutorController = TextEditingController();
+  bool checkSearch = false; 
   String selectedSpecialities = "All";
 
   @override
@@ -41,7 +46,12 @@ class _ListTeacherState extends State<ListTeacherPage> {
   void _listenerScroll() {
     if (_scrollController!.position.atEdge) {
       if (_scrollController!.position.pixels != 0) {
-        fetchTutorList();
+        if (!checkSearch){
+          fetchTutorList();
+        }
+        else{
+          searchTutorList();
+        }
       }
     }
   }
@@ -57,34 +67,62 @@ class _ListTeacherState extends State<ListTeacherPage> {
         await TutorFunctions.getTutorList(currentPage + 1, perPage: 10);
 
     if (dataResponse == null) {
+      loading = false;
       return;
     }
     final tutors = dataResponse.tutors;
     final favorites = dataResponse.favorites;
     setState(() {
-      if (favorites.isNotEmpty) {
-        favoriteList.addAll(favorites);
-      }
       if (tutors.isNotEmpty) {
         tutorList.addAll(tutors);
-        filtertutorList.addAll(getFilterTutorList(tutors, selectedSpecialities));
+        filterTutorList.addAll(getFilterTutorList(tutors, selectedSpecialities));
+        viewTutorList.clear();
+        viewTutorList.addAll(filterTutorList);
         currentPage += 1;
         loading = false;
       }
+      if (favorites.isNotEmpty) {
+        viewFavoriteTutorList.addAll(favorites);
+      }
     });
-    // Xử lý khi không lấy được dữ liệu
+    loading = false;
+  }
+
+  Future<void> searchTutorList() async {
+    if(loading){
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    final dataResponse = await TutorFunctions.searchTutor(currentPageSearch + 1, 10, search: nameTutorController.text);
+    if (dataResponse == null) {
+      loading = false;
+      return;
+    }
+    final tutors = dataResponse;
+    setState(() {
+      if (tutors.isNotEmpty) {
+        viewTutorList.addAll(tutors);
+        currentPageSearch += 1;
+        loading = false;
+      }
+    });
+    loading = false;
   }
 
   void filterList(String type) {
     setState(() {
       if (type == 'All') {
-        filtertutorList = List.from(tutorList);
+        filterTutorList = List.from(tutorList);
       } else {
-        filtertutorList =
+        filterTutorList =
             tutorList.where((tutor) => tutor.specialties
                 ?.split(',').map((e) => listLearningTopics[e]).toList().contains(type) == true).toList();     
       }
       selectedSpecialities = type;
+      viewTutorList.clear();
+      viewTutorList.addAll(filterTutorList);
     });
   }
 
@@ -101,8 +139,9 @@ class _ListTeacherState extends State<ListTeacherPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 141, 204, 213),
-        title: const TextField(
-          decoration: InputDecoration(
+        title: TextField(
+          controller: nameTutorController,
+          decoration: const InputDecoration(
             hintText: 'Nhập tên gia sư...',
           ),
         ),
@@ -110,24 +149,32 @@ class _ListTeacherState extends State<ListTeacherPage> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // Xử lý sự kiện tìm kiếm
+              checkSearch = true;
+              currentPageSearch = 0;
+              viewTutorList.clear();
+              searchTutorList();
             },
           ),
-          DropdownButton<String>(
-            value: selectedSpecialities,
-            padding: const EdgeInsets.only(top: 4),
-            items: ['All', 'STARTERS', 'MOVERS', 'FLYERS', 'KET', 'PET' , 'IELTS',
-             'TOEFL', 'TOEIC', 'Business English', 'English for Kids', 'Conversational English']
-                .map((type) => DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type, style: const TextStyle(fontSize: 15),),
-                    ))
-                .toList(),
-            onChanged: (String? type) {
-              if (type != null) {
-                filterList(type);
-              }
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              setState(() {
+                selectedSpecialities = value;
+              });
+              checkSearch = false;
+              viewTutorList.clear();
+              filterList(value);
             },
+            itemBuilder: (BuildContext context) => ['All', 'STARTERS', 'MOVERS', 'FLYERS', 'KET', 'PET' , 'IELTS',
+             'TOEFL', 'TOEIC', 'Business English', 'English for Kids', 'Conversational English']
+             .map((String option) {
+              return PopupMenuItem<String>(
+                value: option,
+                child: ListTile(
+                  title: Text(option),
+                  tileColor: option == selectedSpecialities ? Colors.blue : null,
+                ),
+              );
+              }).toList(),
           ),
         ],
       ),
@@ -137,12 +184,12 @@ class _ListTeacherState extends State<ListTeacherPage> {
             parent: BouncingScrollPhysics(),
           ),
           controller: _scrollController,
-          itemCount: filtertutorList.length + 1,
+          itemCount: viewTutorList.length + 1,
           itemBuilder: (context, index) {
-            if (index < filtertutorList.length) {
-              return _teacherItem(context, filtertutorList[index], index);
+            if (index < viewTutorList.length) {
+              return _teacherItem(context, viewTutorList[index], index);
             }
-            if (index >= filtertutorList.length && (loading)) {
+            if (index >= viewTutorList.length && (loading)) {
               Timer(const Duration(milliseconds: 30), () {
                 _scrollController!.jumpTo(
                   _scrollController!.position.maxScrollExtent,
@@ -242,8 +289,7 @@ class _ListTeacherState extends State<ListTeacherPage> {
                   onTap: () {
                     // Xử lý khi người dùng nhấn vào icon trái tim ở đây.
                   },
-                  child: Icon(
-                    favoriteList.contains(tutor.userId)
+                  child: Icon(checkSearch && tutor.isFavorite.toString() == "true" || viewFavoriteTutorList.contains(tutor.userId)
                         ? Icons.favorite
                         : Icons.favorite_outline,
                     color: Colors.red,

@@ -8,12 +8,12 @@ import 'package:final_project/ui/account/account.dart';
 import 'package:final_project/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:video_player/video_player.dart';
 
-
-void main() {runApp(MyApp());}
+void main() {runApp(const MyApp());}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,7 +30,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MyHomePageState createState() => _MyHomePageState();
 }
 
@@ -38,11 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0; // Chỉ số của mục đang được chọn
 
   final List<Widget> _pages = [
-    ListTeacherPage(),
-    SchedulePage(),
-    HistoryPage(),
-    ListCoursePage(),
-    ListTeacherPage(),
+    const ListTeacherPage(),
+    const SchedulePage(),
+    const HistoryPage(),
+    const ListCoursePage(),
+    const ListTeacherPage(),
     AccountPage(),
   ];
 
@@ -78,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed, // Hiển thị tất cả các biểu tượng
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() {
             _currentIndex = index;

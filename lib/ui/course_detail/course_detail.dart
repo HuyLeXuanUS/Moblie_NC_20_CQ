@@ -132,17 +132,17 @@ class _CourseDetailState extends State<CourseDetailPage> {
             ),
             // Mục Tổng quan
             ExpansionTile(
-              title: Text('Tổng quan'),
+              title: const Text('Tổng quan'),
               children: [
                 ListTile(
-                  title: Text('❓ Tại sao bạn nên học khóa học này?'),
+                  title: const Text('❓ Tại sao bạn nên học khóa học này?'),
                   subtitle: Text(
                     course!.reason,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
                 ListTile(
-                  title: Text('❓ Bạn có thể làm gì?'),
+                  title: const Text('❓ Bạn có thể làm gì?'),
                   subtitle:
                     Text(
                       course!.purpose,
@@ -154,7 +154,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
             const Divider(), // Dùng để tạo đường ngăn các
             // Mục Trình độ yêu cầu
             ListTile(
-              title: Text('Trình độ yêu cầu'),
+              title: const Text('Trình độ yêu cầu'),
               subtitle: Text(
                 course_level[int.parse(course!.level)],
                 style: const TextStyle(fontSize: 16),
@@ -163,8 +163,9 @@ class _CourseDetailState extends State<CourseDetailPage> {
             const Divider(),
             // Mục Thời lượng khóa học
             ListTile(
-              title: Text('Thời lượng khóa học'),
+              title: const Text('Thời lượng khóa học'),
               subtitle: Text(
+                  // ignore: prefer_interpolation_to_compose_strings
                   course!.topics.length.toString()+' '+'Lessons',
                   style: const TextStyle(fontSize: 16),
                 ),
@@ -172,7 +173,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
             const Divider(),
             // Mục Danh sách chủ đề (sử dụng ListView cho danh sách chủ đề)
             ExpansionTile(
-              title: Text('Danh sách chủ đề'),
+              title: const Text('Danh sách chủ đề'),
               children: [
                 ListView.builder(
                   shrinkWrap:
@@ -184,6 +185,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
                         // Xử lý khi nút được nhấn
                       },
                       child: ListTile(
+                        // ignore: prefer_interpolation_to_compose_strings
                         title: Text((index + 1).toString() + '. '+ course!.topics[index].name), // Tên của chủ đề
                       ),
                     );

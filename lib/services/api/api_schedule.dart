@@ -1,10 +1,10 @@
+// ignore: depend_on_referenced_packages
+import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:final_project/services/api/token_manager.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:final_project/services/models/schedule/schedule_model.dart';
 import 'package:final_project/services/setting/host_api.dart';
-import 'package:http/http.dart' as http;
 
 class ScheduleFunctions {
   static Future<List<Schedule>?> getScheduleByTutorId(String tutorId) async {

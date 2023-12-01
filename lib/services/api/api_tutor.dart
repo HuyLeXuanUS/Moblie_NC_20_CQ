@@ -1,14 +1,15 @@
-import 'package:final_project/services/entity/tutor_fav_entity.dart';
+// ignore: depend_on_referenced_packages
+import 'package:final_project/services/log_interceptor.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:final_project/services/entity/tutor_list_has_favorite_entity.dart';
 import 'package:final_project/services/models/tutor/tutor_model.dart';
 import 'package:final_project/services/setting/host_api.dart';
 import 'package:final_project/services/api/token_manager.dart';
 import 'dart:convert';
 
 class TutorFunctions {
-  static Future<TutorFav?> getTutorList(int page, {int? perPage}) async {
-    final TutorFav dataResponse = TutorFav(tutors: [], favorites: []);
+  static Future<TutorListHasFavourite?> getTutorList(int page, {int? perPage}) async {
+    final TutorListHasFavourite dataResponse = TutorListHasFavourite(tutors: [], favorites: []);
     try {
       String? token = await TokenManager.getToken();
       final queryParameters = {

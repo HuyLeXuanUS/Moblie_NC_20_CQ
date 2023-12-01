@@ -1,5 +1,5 @@
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 import 'package:final_project/services/api/token_manager.dart';
 import 'package:final_project/services/models/course/course_caterogy_model.dart';

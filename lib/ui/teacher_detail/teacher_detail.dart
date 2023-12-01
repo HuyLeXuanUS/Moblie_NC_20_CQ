@@ -242,11 +242,16 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                         // Button "Favorite"
                         Column(
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.favorite),
-                              onPressed: () {
-                                // Xử lý khi nhấn nút "Favorite"
+                            InkWell(
+                              onTap: () {
+                                // Xử lý khi người dùng nhấn vào icon trái tim ở đây.
                               },
+                              // ignore: unrelated_type_equality_checks
+                              child: Icon(tutor?.isFavorite.toString() == "true"
+                                    ? Icons.favorite
+                                    : Icons.favorite_outline,
+                                color: Colors.red,
+                              ),
                             ),
                             const Text('Favorite'),
                           ],
@@ -268,32 +273,26 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                     ),
                     const SizedBox(height: 16.0),
                     Container(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Học vấn',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              Text(
-                                tutor!.education.toString(),
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                            ],
+                          Text(
+                            'Học vấn',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                      child: Text(
+                        tutor!.education.toString(),
+                        style: const TextStyle(fontSize: 16.0),
                       ),
                     ),
 
@@ -450,7 +449,12 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
               ExpansionTile(
                 title: const Text('Người khác đánh giá'),
                 children: [
-                  ListView.builder(
+                  widget.listFeedback!.isEmpty
+                  ? const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('Chưa có đánh giá nào', style: TextStyle(fontSize: 14.0)),
+                  )
+                  : ListView.builder(
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemCount: widget.listFeedback?.length, 

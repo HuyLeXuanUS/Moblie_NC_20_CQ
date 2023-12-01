@@ -1,9 +1,9 @@
 import 'package:final_project/services/models/tutor/tutor_model.dart';
 
-class TutorFav {
+class TutorListHasFavourite {
   final List<Tutor> tutors;
   final List<String> favorites;
-  TutorFav({
+  TutorListHasFavourite({
     required this.tutors,
     required this.favorites,
   });

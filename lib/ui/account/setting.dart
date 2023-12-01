@@ -4,7 +4,10 @@ import 'package:final_project/generated/l10n.dart';
 
 // Màn hình chi cài đặt
 class SettingPage extends StatefulWidget{
+  const SettingPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _SettingState createState() => _SettingState();
 }
 
@@ -12,18 +15,18 @@ class _SettingState extends State<SettingPage>{
   String? selectedLanguage = 'vi';
   String? selectedTheme = 'Sáng';
 
-  Locale _locale_vn = Locale('vn');
-  Locale _locale_en = Locale('en');
+  Locale _locale_vn = const Locale('vn');
+  Locale _locale_en = const Locale('en');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 141, 204, 213), // Đặt màu nền thành màu trắng
+        backgroundColor: const Color.fromARGB(255, 141, 204, 213), // Đặt màu nền thành màu trắng
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(S.of(context).setting, style: TextStyle(
+            Text(S.of(context).setting, style: const TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 3, 117, 210),
                   fontFamily: 'MyFont',
@@ -38,8 +41,8 @@ class _SettingState extends State<SettingPage>{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
+              const Padding(
+                padding: EdgeInsets.only(left: 20),
                 child: Text('Ngôn ngữ', style: TextStyle(fontSize: 16)),
               ),
               DropdownButton<String>(
@@ -49,7 +52,7 @@ class _SettingState extends State<SettingPage>{
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value ?? ''),
+                    child: Text(value),
                   );
                 }).toList(),
                 onChanged: (String? value) {
@@ -65,8 +68,8 @@ class _SettingState extends State<SettingPage>{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
+              const Padding(
+                padding: EdgeInsets.only(left: 20),
                 child: Text('Theme', style: TextStyle(fontSize: 16)),
               ),
               DropdownButton<String>(
@@ -76,7 +79,7 @@ class _SettingState extends State<SettingPage>{
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value ?? ''),
+                    child: Text(value),
                   );
                 }).toList(),
                 onChanged: (String? value) {
