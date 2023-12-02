@@ -9,22 +9,23 @@ import 'package:final_project/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 
-void main() {runApp(const MyApp());}
+void main() {runApp(MyApp());}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
+      localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         S.delegate,
       ],
-      home: LoginPage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const HistoryPage(),
     const ListCoursePage(),
     const ListTeacherPage(),
-    AccountPage(),
+    const AccountPage(),
   ];
 
   @override

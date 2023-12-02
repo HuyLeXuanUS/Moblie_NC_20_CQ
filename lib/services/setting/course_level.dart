@@ -1,3 +1,4 @@
+// ignore: constant_identifier_names
 const course_level = [
   'Any-level',
   'Beginner',

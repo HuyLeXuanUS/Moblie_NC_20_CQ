@@ -1,5 +1,4 @@
 // ignore: depend_on_referenced_packages
-import 'package:final_project/services/log_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:final_project/services/entity/tutor_list_has_favorite_entity.dart';
 import 'package:final_project/services/models/tutor/tutor_model.dart';

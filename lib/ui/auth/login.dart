@@ -5,7 +5,10 @@ import 'package:final_project/services/models/user/user_model.dart';
 import 'package:final_project/services/api/token_manager.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _LoginState createState() => _LoginState();
 }
 
@@ -124,10 +127,11 @@ class _LoginState extends State<LoginPage> {
                               } else {
                                 if (!mounted) return;                                
                                 await TokenManager.saveToken(response['token'].toString());                             
+                                // ignore: use_build_context_synchronously
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MyHomePage(),
+                                    builder: (context) => const MyHomePage(),
                                   ),
                                 );
                               }

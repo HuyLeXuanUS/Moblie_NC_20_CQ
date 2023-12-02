@@ -81,7 +81,7 @@ class _HistoryState extends State<HistoryPage>{
               }
               String tutorReview = listHistoryBooking![index].tutorReview.toString();
               if (tutorReview == "null"){
-                tutorReview = "Không có nhận xét của giáo viên";
+                tutorReview = "Không có dánh giá của gia sư";
               }
 
               return _historyItem(date, timeStart, timeEnd, avatarUrl, name, studentRequest, tutorReview);

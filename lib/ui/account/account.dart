@@ -1,45 +1,79 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/services/api/api_user.dart';
+import 'package:final_project/services/models/user/user_information_model.dart';
+import 'package:final_project/ui/account/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/account/setting.dart';
 
 class AccountPage extends StatefulWidget {
+  const AccountPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _AccountPageState createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
+  UserInfo? user;
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserProfile();
+  }
+
+  Future<void> getUserProfile() async {
+    if (loading){
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    user = await UserFunctions.getUserInformation();
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading
+    ? Center(
+      child: CircularProgressIndicator(
+        color: Theme.of(context).primaryColor),
+    ) 
+    : Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
+        padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
         child: Column(
           children: <Widget>[
-            // Dòng 1: Avatar và Tên
             Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage('assets/pic/bg_login.jpg'), // Đặt hình ảnh avatar ở đây
-                ),
-                SizedBox(width: 10),
-                Text('Tên của bạn', style: TextStyle(fontSize: 18)),
-              ],
-            ),
-            SizedBox(height: 20),
-            // Dòng 2: Button Hồ sơ
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Xử lý khi nút Hồ sơ được nhấn
-                    },
-                    child: Text('Hồ sơ'),
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: user!.avatar.toString(),
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 10),
+                Text(user!.name.toString(), style: const TextStyle(fontSize: 20)),
               ],
             ),
-            // Dòng 3: Button Cài đặt
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -47,11 +81,27 @@ class _AccountPageState extends State<AccountPage> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => SettingPage(),
+                          builder: (context) => ProfilePage(user: user,),
                         ),
                       );
                     },
-                    child: Text('Cài đặt'),
+                    child: const Text('Hồ sơ'),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SettingPage(),
+                        ),
+                      );
+                    },
+                    child: const Text('Cài đặt'),
                   ),
                 ),
               ],
@@ -62,9 +112,9 @@ class _AccountPageState extends State<AccountPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Xử lý khi nút Đăng xuất được nhấn
+                      //Navigator.pop(context);
                     },
-                    child: Text('Đăng xuất'),
+                    child: const Text('Đăng xuất'),
                   ),
                 ),
               ],

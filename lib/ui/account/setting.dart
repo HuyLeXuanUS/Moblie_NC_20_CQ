@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, prefer_final_fields
+
 import 'package:flutter/material.dart';
 import 'package:final_project/generated/l10n.dart';
 
@@ -15,7 +17,9 @@ class _SettingState extends State<SettingPage>{
   String? selectedLanguage = 'vi';
   String? selectedTheme = 'Sáng';
 
+  // ignore: non_constant_identifier_names
   Locale _locale_vn = const Locale('vn');
+  // ignore: non_constant_identifier_names
   Locale _locale_en = const Locale('en');
 
   @override
