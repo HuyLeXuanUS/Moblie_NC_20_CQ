@@ -142,6 +142,13 @@ class _ProfileState extends State<ProfilePage> {
                 );
               }).toList();
 
+              if (nameController.text == '') {
+                var snackBar = const SnackBar(
+                  content: Text("Name is empty"),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+
               final res = await UserFunctions.updateUserInformation(
                 nameController.text,
                 selectedCountry,
@@ -218,25 +225,30 @@ class _ProfileState extends State<ProfilePage> {
                             ),
                             child: Center(
                               child: IconButton(
-                                icon: const Icon(Icons.edit, size: 16, color: Colors.white),
+                                icon: const Icon(Icons.edit,
+                                    size: 16, color: Colors.white),
                                 onPressed: () async {
                                   var pickedFile = await picker.pickImage(
-                                      source: ImageSource.gallery, imageQuality: 50);
+                                      source: ImageSource.gallery,
+                                      imageQuality: 50);
 
                                   if (pickedFile != null) {
                                     final bool res =
-                                        await UserFunctions.uploadAvatar(pickedFile.path);
+                                        await UserFunctions.uploadAvatar(
+                                            pickedFile.path);
                                     if (res) {
-                                      final newUserInfo =
-                                          await UserFunctions.getUserInformation();
+                                      final newUserInfo = await UserFunctions
+                                          .getUserInformation();
                                       setState(() {
-                                        widget.user?.avatar = newUserInfo!.avatar;
+                                        widget.user?.avatar =
+                                            newUserInfo!.avatar;
                                       });
                                     } else if (mounted) {
                                       var snackBar = const SnackBar(
                                         content: Text("Error Upload Avatar"),
                                       );
-                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
                                     }
                                   }
                                 },
@@ -247,7 +259,6 @@ class _ProfileState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
