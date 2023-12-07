@@ -82,7 +82,6 @@ class _ScheduleState extends State<SchedulePage>{
               if (studentRequest == "null"){
                 studentRequest = "Không có yêu cầu cho buổi học";
               }
-
               return _scheduleItem(datetime, avatarUrl, name, studentRequest);
             }
             if (index >= listBooking!.length && (loading)) {
@@ -149,8 +148,8 @@ class _ScheduleState extends State<SchedulePage>{
               const SizedBox(width: 16.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(name, style: const TextStyle(fontSize: 18.0)), 
+                children: [
+                  Text(name, style: const TextStyle(fontSize: 18.0)),
                 ],
               ),
             ],

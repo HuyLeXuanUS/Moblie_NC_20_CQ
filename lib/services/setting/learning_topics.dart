@@ -1,13 +1,25 @@
+import 'package:final_project/services/models/user/learning_topic_model.dart';
+
 const listLearningTopics = {
-  "starters": "STARTERS",
-  "movers": "MOVERS",
-  "flyers": "FLYERS",
-  "ket": "KET",
-  "pet": "PET",
-  "ielts": "IELTS",
-  "toefl": "TOEFL",
-  "toeic": "TOEIC",
   "business-english": "Business English",
   "english-for-kids": "English for Kids",
   "conversational-english": "Conversational English",
 };
+
+List<LearnTopic> listLearnTopicModel = [
+  LearnTopic(
+    id: 3,
+    name: "English for Kids",
+    key: "english-for-kids",
+  ),
+  LearnTopic(
+    id: 4,
+    name: "Business English",
+    key: "business-english",
+  ),
+  LearnTopic(
+    id: 5,
+    name: "Conversational English",
+    key: "conversational-english",
+  ),
+];
