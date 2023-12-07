@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         S.delegate,
       ],
-      home: LoginPage(),
+      home: MyHomePage(),
     );
   }
 }
