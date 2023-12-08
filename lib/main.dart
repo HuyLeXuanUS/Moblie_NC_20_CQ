@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
-import 'package:final_project/ui/schedule/schedule.dart';
+import 'package:final_project/ui/list_schedule/list_schedule.dart';
 import 'package:final_project/ui/list_courses/list_course.dart';
 import 'package:final_project/ui/history/history.dart';
 import 'package:final_project/ui/account/account.dart';

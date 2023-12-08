@@ -61,7 +61,12 @@ class _ScheduleState extends State<SchedulePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading
+      ? Center(
+          child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor),
+        )
+      : Scaffold(
       body: listBooking != null && listBooking!.isNotEmpty
           ? Scrollbar(
               child: ListView.builder(

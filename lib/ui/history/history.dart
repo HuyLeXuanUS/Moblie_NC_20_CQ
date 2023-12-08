@@ -60,7 +60,12 @@ class _HistoryState extends State<HistoryPage>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading
+      ? Center(
+          child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor),
+        )
+      :Scaffold(
       body: Scrollbar(
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(
