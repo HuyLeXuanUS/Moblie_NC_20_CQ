@@ -62,89 +62,111 @@ class _ScheduleState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return loading
-      ? Center(
-          child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor),
-        )
-      : Scaffold(
-      body: listBooking != null && listBooking!.isNotEmpty
-          ? Scrollbar(
-              child: ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
-                ),
-                controller: _scrollController,
-                itemCount: listBooking!.length + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index < listBooking!.length) {
-                    String date = getDate(DateTime.fromMillisecondsSinceEpoch(
-                        listBooking![index]
-                            .scheduleDetailInfo!
-                            .startPeriodTimestamp));
-                    String timeStart = listBooking![index]
-                        .scheduleDetailInfo!
-                        .startPeriod
-                        .toString();
-                    String timeEnd = listBooking![index]
-                        .scheduleDetailInfo!
-                        .endPeriod
-                        .toString();
-                    // ignore: prefer_interpolation_to_compose_strings
-                    String datetime =
-                        // ignore: prefer_interpolation_to_compose_strings
-                        date + "   " + timeStart + " - " + timeEnd;
-                    String avatarUrl = listBooking![index]
-                        .scheduleDetailInfo!
-                        .scheduleInfo!
-                        .tutorInfo!
-                        .avatar
-                        .toString();
-                    String name = listBooking![index]
-                        .scheduleDetailInfo!
-                        .scheduleInfo!
-                        .tutorInfo!
-                        .name
-                        .toString();
-                    String studentRequest =
-                        listBooking![index].studentRequest.toString();
-                    if (studentRequest == "null") {
-                      studentRequest = "Không có yêu cầu cho buổi học";
-                    }
-                    return _scheduleItem(
-                        datetime, avatarUrl, name, studentRequest);
-                  }
-                  if (index >= listBooking!.length && (loading)) {
-                    Timer(const Duration(milliseconds: 30), () {
-                      _scrollController!.jumpTo(
-                        _scrollController!.position.maxScrollExtent,
-                      );
-                    });
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor),
+        ? Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor),
+          )
+        : Scaffold(
+            body: listBooking != null && listBooking!.isNotEmpty
+                ? Scrollbar(
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
                       ),
-                    );
-                  }
-                  return const SizedBox();
-                },
-              ),
-            )
-          : const Center(
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.warning, color: Colors.orange, size: 48), // Kích thước biểu tượng
-                SizedBox(height: 8),  // Khoảng cách giữa biểu tượng và văn bản
-                Text(
-                  "Chưa có lịch học nào",
-                  style: TextStyle(fontSize: 20), // Kích thước văn bản
-                ),
-              ],
-            ),
-          ),
-    );
+                      controller: _scrollController,
+                      itemCount: listBooking!.length + 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index < listBooking!.length) {
+                          // ignore: unused_local_variable
+                          DateTime startDateTime =
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  listBooking![index]
+                                      .scheduleDetailInfo!
+                                      .startPeriodTimestamp);
+
+                          // ignore: unused_local_variable
+                          DateTime endDateTime =
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  listBooking![index]
+                                      .scheduleDetailInfo!
+                                      .endPeriodTimestamp);
+
+                          // ignore: prefer_interpolation_to_compose_strings
+                          String timeStart = startDateTime.hour
+                                  .toString()
+                                  .padLeft(2, '0') +
+                              ":" +
+                              startDateTime.minute.toString().padLeft(2, '0');
+                          // ignore: prefer_interpolation_to_compose_strings
+                          String timeEnd = endDateTime.hour
+																	.toString()
+																	.padLeft(2, '0') +
+                              ":" +
+                              endDateTime.minute.toString().padLeft(2, '0');
+                          // ignore: prefer_interpolation_to_compose_strings
+                          String datetime =
+                              // ignore: prefer_interpolation_to_compose_strings
+                              getDate(startDateTime) +
+                                  "   " +
+                                  timeStart +
+                                  " - " +
+                                  timeEnd;
+                          String avatarUrl = listBooking![index]
+                              .scheduleDetailInfo!
+                              .scheduleInfo!
+                              .tutorInfo!
+                              .avatar
+                              .toString();
+                          String name = listBooking![index]
+                              .scheduleDetailInfo!
+                              .scheduleInfo!
+                              .tutorInfo!
+                              .name
+                              .toString();
+                          String studentRequest =
+                              listBooking![index].studentRequest.toString();
+                          if (studentRequest == "null") {
+                            studentRequest = "Không có yêu cầu cho buổi học";
+                          }
+                          return _scheduleItem(
+                              datetime, avatarUrl, name, studentRequest);
+                        }
+                        if (index >= listBooking!.length && (loading)) {
+                          Timer(const Duration(milliseconds: 30), () {
+                            _scrollController!.jumpTo(
+                              _scrollController!.position.maxScrollExtent,
+                            );
+                          });
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
+                  )
+                : const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.warning,
+                            color: Colors.orange,
+                            size: 48), // Kích thước biểu tượng
+                        SizedBox(
+                            height:
+                                8), // Khoảng cách giữa biểu tượng và văn bản
+                        Text(
+                          "Chưa có lịch học nào",
+                          style: TextStyle(fontSize: 20), // Kích thước văn bản
+                        ),
+                      ],
+                    ),
+                  ),
+          );
   }
 
   Container _scheduleItem(

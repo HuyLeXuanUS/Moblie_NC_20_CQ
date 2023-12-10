@@ -58,7 +58,7 @@ class _AccountPageState extends State<AccountPage> {
             body: Padding(
               padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
               child: Column(
-                children: <Widget>[                 
+                children: <Widget>[
                   Row(
                     children: <Widget>[
                       Container(
@@ -126,7 +126,8 @@ class _AccountPageState extends State<AccountPage> {
                               ),
                             );
                           },
-                          child: const Text('Hồ sơ',
+                          child: const Text(
+                            'Hồ sơ',
                             style: TextStyle(
                               fontSize: 15,
                               color: Colors.white,
@@ -147,7 +148,8 @@ class _AccountPageState extends State<AccountPage> {
                               ),
                             );
                           },
-                          child: const Text('Cài đặt',
+                          child: const Text(
+                            'Cài đặt',
                             style: TextStyle(
                               fontSize: 15,
                               color: Colors.white,
@@ -165,7 +167,8 @@ class _AccountPageState extends State<AccountPage> {
                           onPressed: () {
                             //Navigator.pop(context);
                           },
-                          child: const Text('Đăng xuất',
+                          child: const Text(
+                            'Đăng xuất',
                             style: TextStyle(
                               fontSize: 15,
                               color: Colors.white,

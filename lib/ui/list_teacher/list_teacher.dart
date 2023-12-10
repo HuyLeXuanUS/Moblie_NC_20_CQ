@@ -30,7 +30,7 @@ class _ListTeacherState extends State<ListTeacherPage> {
   bool loading = false;
 
   TextEditingController nameTutorController = TextEditingController();
-  bool checkSearch = false; 
+  bool checkSearch = false;
   String selectedSpecialities = "All";
 
   @override
@@ -40,16 +40,15 @@ class _ListTeacherState extends State<ListTeacherPage> {
     _scrollController!.addListener(_listenerScroll);
 
     fetchTutorList();
-    selectedSpecialities= 'All';
+    selectedSpecialities = 'All';
   }
 
   void _listenerScroll() {
     if (_scrollController!.position.atEdge) {
       if (_scrollController!.position.pixels != 0) {
-        if (!checkSearch){
+        if (!checkSearch) {
           fetchTutorList();
-        }
-        else{
+        } else {
           searchTutorList();
         }
       }
@@ -57,7 +56,7 @@ class _ListTeacherState extends State<ListTeacherPage> {
   }
 
   Future<void> fetchTutorList() async {
-    if(loading){
+    if (loading) {
       return;
     }
     setState(() {
@@ -75,7 +74,8 @@ class _ListTeacherState extends State<ListTeacherPage> {
     setState(() {
       if (tutors.isNotEmpty) {
         tutorList.addAll(tutors);
-        filterTutorList.addAll(getFilterTutorList(tutors, selectedSpecialities));
+        filterTutorList
+            .addAll(getFilterTutorList(tutors, selectedSpecialities));
         viewTutorList.clear();
         viewTutorList.addAll(filterTutorList);
         currentPage += 1;
@@ -89,13 +89,15 @@ class _ListTeacherState extends State<ListTeacherPage> {
   }
 
   Future<void> searchTutorList() async {
-    if(loading){
+    if (loading) {
       return;
     }
     setState(() {
       loading = true;
     });
-    final dataResponse = await TutorFunctions.searchTutor(currentPageSearch + 1, 10, search: nameTutorController.text);
+    final dataResponse = await TutorFunctions.searchTutor(
+        currentPageSearch + 1, 10,
+        search: nameTutorController.text);
     if (dataResponse == null) {
       loading = false;
       return;
@@ -116,9 +118,15 @@ class _ListTeacherState extends State<ListTeacherPage> {
       if (type == 'All') {
         filterTutorList = List.from(tutorList);
       } else {
-        filterTutorList =
-            tutorList.where((tutor) => tutor.specialties
-                ?.split(',').map((e) => listLearningTopics[e]).toList().contains(type) == true).toList();     
+        filterTutorList = tutorList
+            .where((tutor) =>
+                tutor.specialties
+                    ?.split(',')
+                    .map((e) => listLearningTopics[e])
+                    .toList()
+                    .contains(type) ==
+                true)
+            .toList();
       }
       selectedSpecialities = type;
       viewTutorList.clear();
@@ -126,12 +134,19 @@ class _ListTeacherState extends State<ListTeacherPage> {
     });
   }
 
-  List<Tutor> getFilterTutorList(List<Tutor> tutorList, String type){
-    if (type == "All"){
+  List<Tutor> getFilterTutorList(List<Tutor> tutorList, String type) {
+    if (type == "All") {
       return tutorList;
     }
-    return tutorList.where((tutor) => tutor.specialties
-      ?.split(',').map((e) => listLearningTopics[e]).toList().contains(type) == true).toList();
+    return tutorList
+        .where((tutor) =>
+            tutor.specialties
+                ?.split(',')
+                .map((e) => listLearningTopics[e])
+                .toList()
+                .contains(type) ==
+            true)
+        .toList();
   }
 
   @override
@@ -164,17 +179,29 @@ class _ListTeacherState extends State<ListTeacherPage> {
               viewTutorList.clear();
               filterList(value);
             },
-            itemBuilder: (BuildContext context) => ['All', 'STARTERS', 'MOVERS', 'FLYERS', 'KET', 'PET' , 'IELTS',
-             'TOEFL', 'TOEIC', 'Business English', 'English for Kids', 'Conversational English']
-             .map((String option) {
+            itemBuilder: (BuildContext context) => [
+              'All',
+              'STARTERS',
+              'MOVERS',
+              'FLYERS',
+              'KET',
+              'PET',
+              'IELTS',
+              'TOEFL',
+              'TOEIC',
+              'Business English',
+              'English for Kids',
+              'Conversational English'
+            ].map((String option) {
               return PopupMenuItem<String>(
                 value: option,
                 child: ListTile(
                   title: Text(option),
-                  tileColor: option == selectedSpecialities ? Colors.blue : null,
+                  tileColor:
+                      option == selectedSpecialities ? Colors.blue : null,
                 ),
               );
-              }).toList(),
+            }).toList(),
           ),
         ],
       ),
@@ -215,7 +242,8 @@ class _ListTeacherState extends State<ListTeacherPage> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => TeacherDetailPage(id: tutor.userId, listFeedback: tutor.feedbacks),
+            builder: (context) => TeacherDetailPage(
+                tutorId: tutor.userId, listFeedback: tutor.feedbacks),
           ),
         );
       },
@@ -289,7 +317,9 @@ class _ListTeacherState extends State<ListTeacherPage> {
                   onTap: () {
                     // Xử lý khi người dùng nhấn vào icon trái tim ở đây.
                   },
-                  child: Icon(checkSearch && tutor.isFavorite.toString() == "true" || viewFavoriteTutorList.contains(tutor.userId)
+                  child: Icon(
+                    checkSearch && tutor.isFavorite.toString() == "true" ||
+                            viewFavoriteTutorList.contains(tutor.userId)
                         ? Icons.favorite
                         : Icons.favorite_outline,
                     color: Colors.red,
@@ -299,22 +329,22 @@ class _ListTeacherState extends State<ListTeacherPage> {
             ),
             const SizedBox(height: 16.0),
             Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: tutor.specialties
-                ?.split(',')
-                .map(
-                  (e) => Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Text(listLearningTopics[e].toString()),
-                  ),
-                )
-                .toList() ??
-            []),
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: tutor.specialties
+                        ?.split(',')
+                        .map(
+                          (e) => Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Text(listLearningTopics[e].toString()),
+                          ),
+                        )
+                        .toList() ??
+                    []),
             const SizedBox(height: 16.0),
             Text(
               tutor.bio ?? "",

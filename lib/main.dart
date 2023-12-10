@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:final_project/ui/auth/login.dart';
+import 'package:flutter/material.dart';
+//import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
 import 'package:final_project/ui/list_schedule/list_schedule.dart';
 import 'package:final_project/ui/list_courses/list_course.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         S.delegate,
       ],
-      home: MyHomePage(),
+      home: LoginPage(),
     );
   }
 }
