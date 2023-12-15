@@ -1,4 +1,4 @@
-import 'package:final_project/services/models/user/test_preparation_model.dart';
+import 'package:final_project/services/models/topic_and_test_preparation/test_preparation_model.dart';
 
 const listTestPreparation = {
   "starters": "STARTERS",

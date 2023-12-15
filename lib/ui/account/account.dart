@@ -4,6 +4,7 @@ import 'package:final_project/services/api/api_user.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:final_project/services/models/user/user_information_model.dart';
 import 'package:final_project/ui/account/profile.dart';
+import 'package:final_project/ui/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/account/setting.dart';
 
@@ -165,7 +166,12 @@ class _AccountPageState extends State<AccountPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            //Navigator.pop(context);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()),
+                              (route) => false,
+                            );
                           },
                           child: const Text(
                             'Đăng xuất',

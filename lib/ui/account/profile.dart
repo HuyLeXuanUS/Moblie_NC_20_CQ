@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/services/api/api_user.dart';
-import 'package:final_project/services/models/user/learning_topic_model.dart';
-import 'package:final_project/services/models/user/test_preparation_model.dart';
+import 'package:final_project/services/models/topic_and_test_preparation/learning_topic_model.dart';
+import 'package:final_project/services/models/topic_and_test_preparation/test_preparation_model.dart';
 import 'package:final_project/services/models/user/user_information_model.dart';
 import 'package:final_project/services/setting/countries_list.dart';
 import 'package:final_project/services/setting/learning_topics.dart';

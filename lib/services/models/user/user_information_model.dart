@@ -1,6 +1,6 @@
 import 'package:final_project/services/models/tutor/feedback_model.dart';
-import 'package:final_project/services/models/user/learning_topic_model.dart';
-import 'package:final_project/services/models/user/test_preparation_model.dart';
+import 'package:final_project/services/models/topic_and_test_preparation/learning_topic_model.dart';
+import 'package:final_project/services/models/topic_and_test_preparation/test_preparation_model.dart';
 
 class UserInfo {
   late String id;

@@ -33,4 +33,32 @@ class AuthFunctions{
       return {'isSuccess': false, 'message': error.toString()};
     }
   }
+
+  static Future<Map<String, Object>> register(User user) async {
+    try {
+      var url = Uri.https(apiUrl, 'auth/register');
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'email': user.email,
+            'password': user.password,
+            'source': null
+          }));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          'isSuccess': true,
+          'message':
+              'Register successfully, check your email to activate your account'
+        };
+      } else {
+        return {
+          'isSuccess': false,
+          'message': HttpResponse.fromJson(jsonDecode(response.body)).message
+        };
+      }
+    } on Error catch (_, error) {
+      return {'isSuccess': false, 'message': error.toString()};
+    }
+  }
 }

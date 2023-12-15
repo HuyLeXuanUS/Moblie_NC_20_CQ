@@ -1,3 +1,4 @@
+import 'package:final_project/ui/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';

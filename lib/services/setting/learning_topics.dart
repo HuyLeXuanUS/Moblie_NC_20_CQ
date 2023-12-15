@@ -1,4 +1,4 @@
-import 'package:final_project/services/models/user/learning_topic_model.dart';
+import 'package:final_project/services/models/topic_and_test_preparation/learning_topic_model.dart';
 
 const listLearningTopics = {
   "business-english": "Business English",

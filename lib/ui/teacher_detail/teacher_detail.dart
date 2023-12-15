@@ -56,6 +56,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
     final dataResponse =
         await TutorFunctions.getTutorInfomation(widget.tutorId);
     if (dataResponse == null) {
+      loading = false;
       return;
     }
 
@@ -540,9 +541,9 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                           final dataresponse =
                               await ScheduleFunctions.bookAClass(
                                   schedule.id.toString());
-                          print(schedule.id.toString());
-                          print(schedule.tutorInfo);
-                          print(dataresponse);
+                          // print(schedule.id.toString());
+                          // print(schedule.tutorInfo);
+                          // print(dataresponse);
                           // ignore: unnecessary_null_comparison
                           if (dataresponse == null) {
                             return;
@@ -559,6 +560,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                               const CustomSnackBar.error(
                                 message: "Đặt lịch học thất bại",
                               ),
+                              displayDuration: const Duration(seconds: 0),
                             );
                           }
                         } catch (e) {
@@ -568,6 +570,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                             const CustomSnackBar.error(
                               message: "Đặt lịch học thất bại",
                             ),
+                            displayDuration: const Duration(seconds: 0),
                           );
                         }
                       },
