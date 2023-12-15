@@ -1,10 +1,9 @@
-import 'package:final_project/ui/auth/login.dart';
 import 'package:flutter/material.dart';
-//import 'package:final_project/ui/auth/login.dart';
+import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
 import 'package:final_project/ui/list_schedule/list_schedule.dart';
 import 'package:final_project/ui/list_courses/list_course.dart';
-import 'package:final_project/ui/history/history.dart';
+import 'package:final_project/ui/list_history/list_history.dart';
 import 'package:final_project/ui/account/account.dart';
 import 'package:final_project/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

@@ -31,6 +31,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
 
     final dataResponse = await CourseFunctions.getCourseById(widget.id);
     if (dataResponse == null) {
+      loading = false;
       return;
     }
 

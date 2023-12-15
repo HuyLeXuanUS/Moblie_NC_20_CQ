@@ -49,6 +49,7 @@ class _ListCourseState extends State<ListCoursePage>{
         await CourseFunctions.getListCourseWithPagination(currentPage + 1, 10);
 
     if (dataResponse == null) {
+      loading = false;
       return;
     }
 
@@ -56,10 +57,9 @@ class _ListCourseState extends State<ListCoursePage>{
       if (dataResponse.isNotEmpty){
         listCourse?.addAll(dataResponse);
         currentPage += 1;
-        loading = false;
       }
+      loading = false;
     });
-    // Xử lý khi không lấy được dữ liệu
   }
 
   @override

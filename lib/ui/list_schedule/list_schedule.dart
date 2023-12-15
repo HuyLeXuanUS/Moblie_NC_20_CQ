@@ -47,6 +47,7 @@ class _ScheduleState extends State<SchedulePage> {
         await ScheduleFunctions.getUpcomingClass(currentPage + 1, 10);
 
     if (dataResponse == null) {
+      loading = false;
       return;
     }
 
@@ -54,8 +55,8 @@ class _ScheduleState extends State<SchedulePage> {
       if (dataResponse.isNotEmpty) {
         listBooking?.addAll(dataResponse);
         currentPage += 1;
-        loading = false;
       }
+      loading = false;
     });
   }
 
@@ -99,10 +100,10 @@ class _ScheduleState extends State<SchedulePage> {
                               startDateTime.minute.toString().padLeft(2, '0');
                           // ignore: prefer_interpolation_to_compose_strings
                           String timeEnd = endDateTime.hour
-																	.toString()
-																	.padLeft(2, '0') +
+                                  .toString()
+                                  .padLeft(2, '0') +
                               ":" +
-                              endDateTime.minute.toString().padLeft(2, '0');
+                                  endDateTime.minute.toString().padLeft(2, '0');
                           // ignore: prefer_interpolation_to_compose_strings
                           String datetime =
                               // ignore: prefer_interpolation_to_compose_strings

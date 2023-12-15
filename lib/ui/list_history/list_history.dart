@@ -46,6 +46,7 @@ class _HistoryState extends State<HistoryPage> {
         await ScheduleFunctions.getBookedClass(currentPage + 1, 10);
 
     if (dataResponse == null) {
+      loading = false;
       return;
     }
 
@@ -53,8 +54,8 @@ class _HistoryState extends State<HistoryPage> {
       if (dataResponse.isNotEmpty) {
         listHistoryBooking?.addAll(dataResponse);
         currentPage += 1;
-        loading = false;
       }
+      loading = false;
     });
   }
 
