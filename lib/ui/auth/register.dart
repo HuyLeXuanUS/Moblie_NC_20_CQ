@@ -1,3 +1,5 @@
+import 'package:final_project/services/api/api_auth.dart';
+import 'package:final_project/services/models/user/user_model.dart';
 import 'package:final_project/utils/validate_email.dart';
 import 'package:flutter/material.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -123,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 displayDuration: const Duration(seconds: 0),
                               );
-                            } else if (!validateEmail(emailController.text)){
+                            } else if (!validateEmail(emailController.text)) {
                               showTopSnackBar(
                                 // ignore: use_build_context_synchronously
                                 Overlay.of(context),
@@ -132,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 displayDuration: const Duration(seconds: 0),
                               );
-                            } else if (passwordController.text.length < 6){
+                            } else if (passwordController.text.length < 6) {
                               showTopSnackBar(
                                 // ignore: use_build_context_synchronously
                                 Overlay.of(context),
@@ -141,7 +143,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 displayDuration: const Duration(seconds: 0),
                               );
-                            } else if (passwordController.text != repasswordController.text){
+                            } else if (passwordController.text !=
+                                repasswordController.text) {
                               showTopSnackBar(
                                 // ignore: use_build_context_synchronously
                                 Overlay.of(context),
@@ -151,14 +154,32 @@ class _RegisterPageState extends State<RegisterPage> {
                                 displayDuration: const Duration(seconds: 0),
                               );
                             } else {
-                              showTopSnackBar(
-                                // ignore: use_build_context_synchronously
-                                Overlay.of(context),
-                                const CustomSnackBar.success(
-                                  message: "Đăng kí thành công",
-                                ),
-                                displayDuration: const Duration(seconds: 0),
-                              );
+                              var dataResponse = await AuthFunctions.register(
+                                  User(emailController.text,
+                                      passwordController.text));
+
+                              bool isSuccess =
+                                  dataResponse['isSuccess'] as bool;
+
+                              if (!isSuccess) {
+                                showTopSnackBar(
+                                  // ignore: use_build_context_synchronously
+                                  Overlay.of(context),
+                                  const CustomSnackBar.error(
+                                    message: "Đăng kí thất bại",
+                                  ),
+                                  displayDuration: const Duration(seconds: 0),
+                                );
+                              } else {
+                                showTopSnackBar(
+                                  // ignore: use_build_context_synchronously
+                                  Overlay.of(context),
+                                  const CustomSnackBar.success(
+                                    message: "Đăng kí thành công! Xác thực email trong hộp thư để tiếp tục!",
+                                  ),
+                                  displayDuration: const Duration(seconds: 0),
+                                );
+                              }
                             }
                           },
                           child: const Center(
@@ -172,30 +193,20 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        width: double.infinity,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(10.0), // Bo tròn góc
-                          color:
-                              const Color.fromARGB(255, 3, 117, 210), // Màu nền
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Center(
-                            child: Text(
-                              'QUAY LẠI',
-                              style: TextStyle(
-                                color: Colors.white, // Màu chữ
-                                fontSize: 18,
-                              ),
-                            ),
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Đã có tài khoản?",
+                              style: TextStyle(fontSize: 16)),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Đăng nhập',
+                                style: TextStyle(fontSize: 16)),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),

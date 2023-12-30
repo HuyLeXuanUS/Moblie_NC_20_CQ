@@ -46,8 +46,6 @@ class ScheduleFunctions {
             "scheduleDetailIds": list,
           }));
 
-      print(response.body.toString());
-
       if (response.statusCode == 200) {
         return true;
       } else {

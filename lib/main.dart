@@ -1,4 +1,3 @@
-import 'package:final_project/ui/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
@@ -47,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     const SchedulePage(),
     const HistoryPage(),
     const ListCoursePage(),
-    const ListTeacherPage(),
     const AccountPage(),
   ];
 
@@ -72,10 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_stories),
             label: 'Khóa học',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.border_color),
-            label: 'Khóa học của tôi',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

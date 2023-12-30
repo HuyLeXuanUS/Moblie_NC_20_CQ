@@ -79,11 +79,11 @@ class _ListTeacherState extends State<ListTeacherPage> {
         viewTutorList.clear();
         viewTutorList.addAll(filterTutorList);
         currentPage += 1;
-        loading = false;
       }
       if (favorites.isNotEmpty) {
         viewFavoriteTutorList.addAll(favorites);
       }
+      loading = false;
     });
     loading = false;
   }

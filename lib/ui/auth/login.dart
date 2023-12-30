@@ -137,10 +137,10 @@ class _LoginState extends State<LoginPage> {
                                 displayDuration: const Duration(seconds: 0),
                               );
                             } else {
-                              var response = await AuthFunctions.login(User(
+                              var dataResponse = await AuthFunctions.login(User(
                                   emailController.text,
                                   passwordController.text));
-                              if (response['isSuccess'] == false) {
+                              if (dataResponse['isSuccess'] == false) {
                                 showTopSnackBar(
                                   // ignore: use_build_context_synchronously
                                   Overlay.of(context),
@@ -153,7 +153,7 @@ class _LoginState extends State<LoginPage> {
                                 setState(() {});
                               } else {
                                 if (!mounted) return;
-                                await TokenManager.saveToken(response['token'].toString());
+                                await TokenManager.saveToken(dataResponse['token'].toString());
                                 showTopSnackBar(
                                 // ignore: use_build_context_synchronously
                                   Overlay.of(context),

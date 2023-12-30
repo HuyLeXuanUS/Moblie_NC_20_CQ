@@ -540,19 +540,23 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                           // ignore: unused_local_variable
                           final dataresponse =
                               await ScheduleFunctions.bookAClass(
-                                  schedule.id.toString());
-                          // print(schedule.id.toString());
-                          // print(schedule.tutorInfo);
-                          // print(dataresponse);
+                                  schedule.scheduleDetails[0].id);
                           // ignore: unnecessary_null_comparison
                           if (dataresponse == null) {
                             return;
                           }
                           if (dataresponse && mounted) {
-                            setState(() {});
-                            showAboutDialog(context: context, children: [
-                              const Text("Đặt lịch học thành công"),
-                            ]);
+                            setState(() {
+                              schedule.isBooked = true;
+                            });
+                            showTopSnackBar(
+                              // ignore: use_build_context_synchronously
+                              Overlay.of(context),
+                              const CustomSnackBar.success(
+                                message: "Đặt lịch học thành công",
+                              ),
+                              displayDuration: const Duration(seconds: 0),
+                            );
                           } else {
                             showTopSnackBar(
                               // ignore: use_build_context_synchronously
