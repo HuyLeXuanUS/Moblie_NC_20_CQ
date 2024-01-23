@@ -99,10 +99,8 @@ class _ScheduleState extends State<SchedulePage> {
                               ":" +
                               startDateTime.minute.toString().padLeft(2, '0');
                           // ignore: prefer_interpolation_to_compose_strings
-                          String timeEnd = endDateTime.hour
-                                  .toString()
-                                  .padLeft(2, '0') +
-                              ":" +
+                          String timeEnd = endDateTime.hour.toString().padLeft(2, '0') +
+                                  ":" +
                                   endDateTime.minute.toString().padLeft(2, '0');
                           // ignore: prefer_interpolation_to_compose_strings
                           String datetime =
@@ -129,8 +127,8 @@ class _ScheduleState extends State<SchedulePage> {
                           if (studentRequest == "null") {
                             studentRequest = "Không có yêu cầu cho buổi học";
                           }
-                          return _scheduleItem(
-                              datetime, avatarUrl, name, studentRequest);
+                          return _scheduleItem(startDateTime, datetime,
+                              avatarUrl, name, studentRequest);
                         }
                         if (index >= listBooking!.length && (loading)) {
                           Timer(const Duration(milliseconds: 30), () {
@@ -156,13 +154,13 @@ class _ScheduleState extends State<SchedulePage> {
                       children: [
                         Icon(Icons.warning,
                             color: Colors.orange,
-                            size: 48), // Kích thước biểu tượng
+                            size: 48),
                         SizedBox(
                             height:
-                                8), // Khoảng cách giữa biểu tượng và văn bản
+                                8),
                         Text(
                           "Chưa có lịch học nào",
-                          style: TextStyle(fontSize: 20), // Kích thước văn bản
+                          style: TextStyle(fontSize: 20),
                         ),
                       ],
                     ),
@@ -170,8 +168,8 @@ class _ScheduleState extends State<SchedulePage> {
           );
   }
 
-  Container _scheduleItem(
-      String datetime, String avatar, String name, String studentRequest) {
+  Container _scheduleItem(DateTime startDateTime, String datetime,
+      String avatar, String name, String studentRequest) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(16.0),
@@ -221,17 +219,36 @@ class _ScheduleState extends State<SchedulePage> {
             ],
           ),
           const SizedBox(height: 16.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  // Xử lý khi nút được nhấn
-                },
-                child: const Text('Vào lớp học'),
-              ),
-            ],
-          ),
+          DateTime.now().add(const Duration(hours: 2)).isBefore(startDateTime)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        // Xử lý khi nút được nhấn
+                      },
+                      style: ElevatedButton.styleFrom(
+                        side: const BorderSide(color: Colors.red),
+                        backgroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        'Hủy lớp học',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        // Xử lý khi nút được nhấn
+                      },
+                      child: const Text('Vào lớp học'),
+                    ),
+                  ],
+                ),
           ExpansionTile(
             title: const Text("Yêu cầu buổi học",
                 style: TextStyle(fontSize: 17.0)),

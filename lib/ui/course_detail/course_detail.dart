@@ -112,21 +112,6 @@ class _CourseDetailState extends State<CourseDetailPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(course!.description),
-                  ),                           
-                  Padding(
-                    padding: const EdgeInsets.all(16.0), 
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment
-                          .stretch, // Để canh chỉnh nút theo chiều ngang
-                      children: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            // Xử lý khi nút được nhấn
-                          },
-                          child: const Text('Khám phá'),
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),
