@@ -15,19 +15,26 @@ class ListCoursePage extends StatefulWidget {
   _ListCourseState createState() => _ListCourseState();
 }
 
-class _ListCourseState extends State<ListCoursePage>{
+class _ListCourseState extends State<ListCoursePage> {
   List<Course>? listCourse = List.empty(growable: true);
+  List<Course>? listViewCourse = List.empty(growable: true);
 
   ScrollController? _scrollController;
   int currentPage = 0;
   bool loading = false;
+
+  TextEditingController searchController = TextEditingController();
+  bool isSearch = false;
+  String selectedLevel = 'All';
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _scrollController!.addListener(_listenerScroll);
+
     fetchCourseList();
+    selectedLevel = 'All';
   }
 
   void _listenerScroll() {
@@ -39,7 +46,7 @@ class _ListCourseState extends State<ListCoursePage>{
   }
 
   Future<void> fetchCourseList() async {
-    if(loading){
+    if (loading) {
       return;
     }
     setState(() {
@@ -52,14 +59,70 @@ class _ListCourseState extends State<ListCoursePage>{
       loading = false;
       return;
     }
-
     setState(() {
-      if (dataResponse.isNotEmpty){
+      if (dataResponse.isNotEmpty) {
         listCourse?.addAll(dataResponse);
+
+        if (isSearch) {
+          List<Course>? temp = dataResponse
+              .where((course) =>
+                  course.name
+                      .toLowerCase()
+                      .contains(searchController.text.toLowerCase()) ||
+                  course.description
+                      .toLowerCase()
+                      .contains(searchController.text.toLowerCase()))
+              .toList();
+          listViewCourse?.addAll(temp);
+        } else {
+          if (selectedLevel != 'All') {
+            List<Course>? temp = dataResponse
+                .where((course) =>
+                    course_level[int.parse(course.level)] == selectedLevel)
+                .toList();
+            listViewCourse?.addAll(temp);
+          } else {
+            listViewCourse?.addAll(dataResponse);
+          }
+        }
         currentPage += 1;
       }
       loading = false;
     });
+  }
+
+  void searchCourseByString(String search) {
+    if (search.isEmpty) {
+      setState(() {
+        isSearch = false;
+        listViewCourse = List.from(listCourse!);
+      });
+    } else {
+      setState(() {
+        isSearch = true;
+        listViewCourse = listCourse
+            ?.where((course) =>
+                course.name.toLowerCase().contains(search.toLowerCase()) ||
+                course.description.toLowerCase().contains(search.toLowerCase()))
+            .toList();
+      });
+    }
+  }
+
+  void filterCourseList(String level) {
+    if (level == 'All') {
+      setState(() {
+        listViewCourse = List.from(listCourse!);
+      });
+    } else {
+      isSearch = false;
+      setState(() {
+        listViewCourse = listCourse
+            // ignore: iterable_contains_unrelated_type
+            ?.where((course) => course_level[int.parse(course.level)] == level)
+            .toList();
+      });
+    }
   }
 
   @override
@@ -67,8 +130,9 @@ class _ListCourseState extends State<ListCoursePage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 141, 204, 213),
-        title: const TextField(
-          decoration: InputDecoration(
+        title: TextField(
+          controller: searchController,
+          decoration: const InputDecoration(
             hintText: 'Nhập tên khóa học...',
           ),
         ),
@@ -76,27 +140,37 @@ class _ListCourseState extends State<ListCoursePage>{
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // Xử lý sự kiện tìm kiếm
+              searchCourseByString(searchController.text);
             },
           ),
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Lọc 1'),
-                  value: 'filter1',
-                ),
-                const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Lọc 2'),
-                  value: 'filter2',
-                ),
-              ];
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              setState(() {
+                selectedLevel = value;
+                searchController.text = '';
+              });
+              isSearch = false;
+              listViewCourse?.clear();
+              filterCourseList(value);
             },
-            onSelected: (value) {
-              // Xử lý sự kiện lọc
-            },
+            itemBuilder: (BuildContext context) => [
+              'All',
+              'Any-level',
+              'Beginner',
+              'Upper-Beginner',
+              'Pre-Intermediate',
+              'Intermediate',
+              'Upper-Intermediate',
+              'Pre-Advanced',
+              'Advanced',
+            ].map((String option) {
+              return PopupMenuItem<String>(
+                  value: option,
+                  child: ListTile(
+                    title: Text(option),
+                    tileColor: option == selectedLevel ? Colors.blue : null,
+                  ));
+            }).toList(),
           ),
         ],
       ),
@@ -106,12 +180,12 @@ class _ListCourseState extends State<ListCoursePage>{
             parent: BouncingScrollPhysics(),
           ),
           controller: _scrollController,
-          itemCount: listCourse!.length + 1,
+          itemCount: listViewCourse!.length + 1,
           itemBuilder: (context, index) {
-            if (index < listCourse!.length) {
-              return _courseItem(context, listCourse![index], index);
+            if (index < listViewCourse!.length) {
+              return _courseItem(context, listViewCourse![index], index);
             }
-            if (index >= listCourse!.length && (loading)) {
+            if (index >= listViewCourse!.length && (loading)) {
               Timer(const Duration(milliseconds: 30), () {
                 _scrollController!.jumpTo(
                   _scrollController!.position.maxScrollExtent,
@@ -188,7 +262,6 @@ class _ListCourseState extends State<ListCoursePage>{
               padding: const EdgeInsets.all(8.0),
               child: Text(course.description),
             ),
-            // Hàng thứ tư: Hai TextButton
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
