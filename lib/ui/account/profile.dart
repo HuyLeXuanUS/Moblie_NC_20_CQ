@@ -10,6 +10,8 @@ import 'package:final_project/services/setting/user_level.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 // Màn hình chi tiết khóa học
 class ProfilePage extends StatefulWidget {
@@ -143,10 +145,14 @@ class _ProfileState extends State<ProfilePage> {
               }).toList();
 
               if (nameController.text == '') {
-                var snackBar = const SnackBar(
-                  content: Text("Name is empty"),
+                showTopSnackBar(
+                // ignore: use_build_context_synchronously
+                  Overlay.of(context),
+                  const CustomSnackBar.error(
+                    message: "Name is empty",
+                  ),
+                  displayDuration: const Duration(seconds: 0),
                 );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
 
               final res = await UserFunctions.updateUserInformation(
@@ -160,14 +166,23 @@ class _ProfileState extends State<ProfilePage> {
               );
 
               if (res != null && mounted) {
-                var snackBar =
-                    const SnackBar(content: Text("Success UpdateProfile"));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else {
-                var snackBar =
-                    const SnackBar(content: Text("Error UpdateProfile"));
+                showTopSnackBar(
                 // ignore: use_build_context_synchronously
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Overlay.of(context),
+                  const CustomSnackBar.success(
+                    message: "Cập nhật thành công",
+                  ),
+                  displayDuration: const Duration(seconds: 0),
+                );
+              } else {
+                showTopSnackBar(
+                // ignore: use_build_context_synchronously
+                  Overlay.of(context),
+                  const CustomSnackBar.error(
+                    message: "Cập nhật thất bại",
+                  ),
+                  displayDuration: const Duration(seconds: 0),
+                );
               }
             },
           ),

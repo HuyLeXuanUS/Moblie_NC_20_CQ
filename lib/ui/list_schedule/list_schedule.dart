@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/services/api/api_schedule.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:flutter/material.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -99,7 +101,9 @@ class _ScheduleState extends State<SchedulePage> {
                               ":" +
                               startDateTime.minute.toString().padLeft(2, '0');
                           // ignore: prefer_interpolation_to_compose_strings
-                          String timeEnd = endDateTime.hour.toString().padLeft(2, '0') +
+                          String timeEnd = endDateTime.hour
+                                  .toString()
+                                  .padLeft(2, '0') +
                                   ":" +
                                   endDateTime.minute.toString().padLeft(2, '0');
                           // ignore: prefer_interpolation_to_compose_strings
@@ -127,8 +131,14 @@ class _ScheduleState extends State<SchedulePage> {
                           if (studentRequest == "null") {
                             studentRequest = "Không có yêu cầu cho buổi học";
                           }
+                          String detailId = listBooking![index]
+                              .id
+                              .toString();
+
+                          //print(detailId);
+
                           return _scheduleItem(startDateTime, datetime,
-                              avatarUrl, name, studentRequest);
+                              avatarUrl, name, studentRequest, detailId);
                         }
                         if (index >= listBooking!.length && (loading)) {
                           Timer(const Duration(milliseconds: 30), () {
@@ -152,12 +162,8 @@ class _ScheduleState extends State<SchedulePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.warning,
-                            color: Colors.orange,
-                            size: 48),
-                        SizedBox(
-                            height:
-                                8),
+                        Icon(Icons.warning, color: Colors.orange, size: 48),
+                        SizedBox(height: 8),
                         Text(
                           "Chưa có lịch học nào",
                           style: TextStyle(fontSize: 20),
@@ -169,7 +175,7 @@ class _ScheduleState extends State<SchedulePage> {
   }
 
   Container _scheduleItem(DateTime startDateTime, String datetime,
-      String avatar, String name, String studentRequest) {
+      String avatar, String name, String studentRequest, String detailId) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(16.0),
@@ -224,8 +230,20 @@ class _ScheduleState extends State<SchedulePage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     ElevatedButton(
-                      onPressed: () {
-                        // Xử lý khi nút được nhấn
+                      onPressed: () async {
+                        await ScheduleFunctions.cancelClass(detailId);
+                        setState(() {
+                          listBooking!.removeWhere((element) =>
+                              element.id == detailId);
+                        });
+                        showTopSnackBar(
+                          // ignore: use_build_context_synchronously
+                          Overlay.of(context),
+                          const CustomSnackBar.error(
+                            message: "Hủy lớp học thành công",
+                          ),
+                          displayDuration: const Duration(seconds: 0),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         side: const BorderSide(color: Colors.red),

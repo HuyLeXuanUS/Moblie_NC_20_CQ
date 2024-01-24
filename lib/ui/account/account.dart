@@ -7,6 +7,7 @@ import 'package:final_project/ui/account/profile.dart';
 import 'package:final_project/ui/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/account/setting.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -50,6 +51,27 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    String datetime = "";
+    DateTime datetimeStart = DateTime.now();
+    if (nextClass != null) {
+      DateTime startDateTime = DateTime.fromMillisecondsSinceEpoch(
+          nextClass!.scheduleDetailInfo!.startPeriodTimestamp);
+      DateTime endDateTime = DateTime.fromMillisecondsSinceEpoch(
+          nextClass!.scheduleDetailInfo!.endPeriodTimestamp);
+      // ignore: prefer_interpolation_to_compose_strings
+      String timeStart = startDateTime.hour.toString().padLeft(2, '0') +
+          ":" +
+          startDateTime.minute.toString().padLeft(2, '0');
+      // ignore: prefer_interpolation_to_compose_strings
+      String timeEnd = endDateTime.hour.toString().padLeft(2, '0') +
+          ":" +
+          endDateTime.minute.toString().padLeft(2, '0');
+      datetime =
+          // ignore: prefer_interpolation_to_compose_strings
+          getDate(startDateTime) + "   " + timeStart + " - " + timeEnd;
+      datetimeStart = startDateTime;
+    }
+
     return loading
         ? Center(
             child: CircularProgressIndicator(
@@ -85,6 +107,67 @@ class _AccountPageState extends State<AccountPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  // Next class
+                  nextClass != null
+                  ? Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Center(
+                            child: Text("Buổi học sắp tới",
+                              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),     
+                          ),
+                          const SizedBox(height: 16.0),
+                          Center(
+                            child: Text(datetime,
+                              style: const TextStyle(fontSize: 18.0)),     
+                          ),
+                          const SizedBox(height: 16.0),
+                          Center(
+                            child: Countdown(
+                              seconds: datetimeStart.difference(DateTime.now()).inSeconds.toInt(), 
+                              build: (BuildContext context, double time) {
+                                int hours = (time / 3600).floor();
+                                int minutes = ((time % 3600) / 60).floor();
+                                int seconds = (time % 60).floor();
+                                return Text('Còn: $hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                                  style: const TextStyle(fontSize: 18.0));
+                              },
+                              interval: const Duration(milliseconds: 100),
+                              onFinished: () {},
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Xử lý khi nút được nhấn
+                                },
+                                child: const Text('Vào lớp học'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
+
+                  const SizedBox(height: 20),
                   Container(
                     width: double.infinity,
                     height: 100,
@@ -118,14 +201,18 @@ class _AccountPageState extends State<AccountPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
+                          onPressed: () async {
+                            await Navigator.of(context)
+                                .push(
                               MaterialPageRoute(
                                 builder: (context) => ProfilePage(
                                   user: user,
                                 ),
                               ),
-                            );
+                            )
+                                .then((value) {
+                              getUserProfile();
+                            });
                           },
                           child: const Text(
                             'Hồ sơ',
@@ -188,5 +275,9 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ),
           );
+  }
+
+  String getDate(DateTime dateTime) {
+    return "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year.toString()}"; // Định dạng ngày
   }
 }

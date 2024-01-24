@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:final_project/services/setting/learning_topics.dart';
+import 'package:final_project/services/setting/test_preparation.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/teacher_detail/teacher_detail.dart';
 import 'package:final_project/services/models/tutor/tutor_model.dart';
 import 'package:final_project/services/api/api_tutor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ListTeacherPage extends StatefulWidget {
   const ListTeacherPage({super.key});
@@ -122,10 +125,15 @@ class _ListTeacherState extends State<ListTeacherPage> {
             .where((tutor) =>
                 tutor.specialties
                     ?.split(',')
-                    .map((e) => listLearningTopics[e])
+                    .map((e) => listTestPreparation[e])
                     .toList()
                     .contains(type) ==
-                true)
+                true ||
+                tutor.specialties
+                    ?.split(',')
+                    .map((e) => listLearningTopics[e])
+                    .toList()
+                    .contains(type) == true)
             .toList();
       }
       selectedSpecialities = type;
@@ -142,10 +150,9 @@ class _ListTeacherState extends State<ListTeacherPage> {
         .where((tutor) =>
             tutor.specialties
                 ?.split(',')
-                .map((e) => listLearningTopics[e])
+                .map((e) => listTestPreparation[e])
                 .toList()
-                .contains(type) ==
-            true)
+                .contains(type) == true)
         .toList();
   }
 
@@ -245,7 +252,10 @@ class _ListTeacherState extends State<ListTeacherPage> {
             builder: (context) => TeacherDetailPage(
                 tutorId: tutor.userId, listFeedback: tutor.feedbacks),
           ),
-        );
+        ).then((value) => {
+          fetchTutorList(),
+          selectedSpecialities = 'All',
+      });
       },
       child: Container(
         margin: const EdgeInsets.all(8.0),
@@ -314,8 +324,23 @@ class _ListTeacherState extends State<ListTeacherPage> {
                 ),
                 const SizedBox(width: 16.0),
                 InkWell(
-                  onTap: () {
-                    // Xử lý khi người dùng nhấn vào icon trái tim ở đây.
+                  onTap: () async {
+                    await TutorFunctions.manageFavoriteTutor(tutor.userId);
+                    setState(() {
+                      if (viewFavoriteTutorList.contains(tutor.userId)) {
+                        viewFavoriteTutorList.remove(tutor.userId);
+                      } else {
+                        viewFavoriteTutorList.add(tutor.userId);
+                      }
+                    });
+                    showTopSnackBar(
+                    // ignore: use_build_context_synchronously
+                      Overlay.of(context),
+                      const CustomSnackBar.success(
+                        message: "Cập nhật giáo viên yêu thích thành công",
+                      ),
+                      displayDuration: const Duration(seconds: 0),
+                    );
                   },
                   child: Icon(
                     checkSearch && tutor.isFavorite.toString() == "true" ||
@@ -340,7 +365,9 @@ class _ListTeacherState extends State<ListTeacherPage> {
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            child: Text(listLearningTopics[e].toString()),
+                            child: listLearningTopics[e] != null ? 
+                            Text(listLearningTopics[e].toString())
+                            : Text(listTestPreparation[e].toString()),
                           ),
                         )
                         .toList() ??
@@ -361,7 +388,12 @@ class _ListTeacherState extends State<ListTeacherPage> {
               children: [
                 TextButton(
                   onPressed: () {
-                    // Xử lý khi nhấn nút "Book"
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TeacherDetailPage(
+                            tutorId: tutor.userId, listFeedback: tutor.feedbacks),
+                      ),
+                    );
                   },
                   child: const Text('Book'),
                 ),

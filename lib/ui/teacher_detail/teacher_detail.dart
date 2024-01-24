@@ -9,7 +9,8 @@ import 'package:final_project/services/setting/learning_topics.dart';
 import 'package:final_project/services/setting/test_preparation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-//import 'package:video_player/video_player.dart';
+// ignore: depend_on_referenced_packages
+import 'package:video_player/video_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -31,11 +32,15 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
   bool loading = false;
   Tutor? tutor;
 
+  bool checkFavorite = false;
+
   bool loadingSchedule = false;
   List<Schedule> listSchedules = List.empty(growable: true);
   bool isExpanded = false;
 
-  //VideoPlayerController? _controller;
+  String videoUrl = "";
+
+  late VideoPlayerController? _controller;
 
   TextStyle get primayryStyle => Theme.of(context)
       .textTheme
@@ -46,6 +51,19 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
   void initState() {
     super.initState();
     fetchDetailTutor();
+    checkFavorite = (tutor?.isFavorite.toString() == "true");
+
+    _controller = VideoPlayerController.networkUrl(Uri.parse(
+        videoUrl))
+    ..initialize().then((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_controller != null) _controller!.dispose();
   }
 
   Future<void> fetchDetailTutor() async {
@@ -62,6 +80,13 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
 
     setState(() {
       tutor = dataResponse;
+      videoUrl = tutor!.video.toString();
+      _controller = VideoPlayerController.networkUrl(Uri.parse(
+        videoUrl))
+      ..initialize().then((_) {
+        setState(() {});
+      });
+      checkFavorite = (tutor?.isFavorite.toString() == "true");
       loading = false;
     });
   }
@@ -113,22 +138,18 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
         : tutor == null
             ? const SizedBox()
             : Scaffold(
-                // floatingActionButton: FloatingActionButton(
-                //   onPressed: () {
-                //     setState(() {
-                //       if (_controller != null) {
-                //         _controller!.value.isPlaying
-                //             ? _controller!.pause()
-                //             : _controller!.play();
-                //       }
-                //     });
-                //   },
-                //   child: Icon(
-                //     _controller?.value.isPlaying ?? false
-                //         ? Icons.pause
-                //         : Icons.play_arrow,
-                //   ),
-                // ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      _controller != null && _controller!.value.isPlaying
+                          ? _controller!.pause()
+                          : _controller!.play();
+                    });
+                  },
+                  child: Icon(
+                    _controller != null && _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  ),
+                ),
                 appBar: AppBar(
                   backgroundColor: const Color.fromARGB(255, 141, 204, 213),
                   title: const Row(
@@ -242,17 +263,26 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                     const Text('Chat'),
                                   ],
                                 ),
-
-                                // Button "Favorite"
                                 Column(
                                   children: [
                                     InkWell(
-                                      onTap: () {
-                                        // Xử lý khi người dùng nhấn vào icon trái tim ở đây.
+                                      onTap: () async {
+                                        await TutorFunctions.manageFavoriteTutor(tutor!.userId);
+                                        setState(() {
+                                          checkFavorite = !checkFavorite;
+                                        });
+                                        showTopSnackBar(
+                                        // ignore: use_build_context_synchronously
+                                          Overlay.of(context),
+                                          const CustomSnackBar.success(
+                                            message: "Cập nhật giáo viên yêu thích thành công",
+                                          ),
+                                          displayDuration: const Duration(seconds: 0),
+                                        );
                                       },
                                       // ignore: unrelated_type_equality_checks
                                       child: Icon(
-                                        tutor?.isFavorite.toString() == "true"
+                                        checkFavorite
                                             ? Icons.favorite
                                             : Icons.favorite_outline,
                                         color: Colors.red,
@@ -275,6 +305,15 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                   ],
                                 ),
                               ],
+                            ),
+                            const SizedBox(height: 16.0),
+                            Center(
+                              child: _controller!.value.isInitialized
+                                  ? AspectRatio(
+                                      aspectRatio: _controller!.value.aspectRatio,
+                                      child: VideoPlayer(_controller!),
+                                    )
+                                  : Container(),
                             ),
                             const SizedBox(height: 16.0),
                             Container(
@@ -434,6 +473,8 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                           ],
                         ),
                       ),
+
+
                       ExpansionTile(
                           onExpansionChanged: (bool expanding) {
                             if (expanding) {
