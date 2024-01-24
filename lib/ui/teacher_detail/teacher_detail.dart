@@ -52,7 +52,6 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
     super.initState();
     fetchDetailTutor();
     checkFavorite = (tutor?.isFavorite.toString() == "true");
-
     _controller = VideoPlayerController.networkUrl(Uri.parse(
         videoUrl))
     ..initialize().then((_) {

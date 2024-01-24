@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/services/api/api_course.dart';
 import 'package:final_project/services/setting/course_level.dart';
 import 'package:final_project/services/models/course/course_model.dart';
+import 'package:final_project/ui/course_detail/topic_pdf.dart';
 import 'package:flutter/material.dart';
 
 // Màn hình chi tiết khóa học
@@ -137,8 +138,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
                 ),
               ],
             ),
-            const Divider(), // Dùng để tạo đường ngăn các
-            // Mục Trình độ yêu cầu
+            const Divider(),
             ListTile(
               title: const Text('Trình độ yêu cầu'),
               subtitle: Text(
@@ -147,7 +147,6 @@ class _CourseDetailState extends State<CourseDetailPage> {
               ),
             ),
             const Divider(),
-            // Mục Thời lượng khóa học
             ListTile(
               title: const Text('Thời lượng khóa học'),
               subtitle: Text(
@@ -157,22 +156,29 @@ class _CourseDetailState extends State<CourseDetailPage> {
                 ),
             ),
             const Divider(),
-            // Mục Danh sách chủ đề (sử dụng ListView cho danh sách chủ đề)
             ExpansionTile(
               title: const Text('Danh sách chủ đề'),
               children: [
                 ListView.builder(
                   shrinkWrap:
-                      true, // Để tránh lỗi vượt quá giới hạn trong ExpansionTile
-                  itemCount: course!.topics.length, // Số lượng chủ đề
+                      true, 
+                  itemCount: course!.topics.length, 
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        // Xử lý khi nút được nhấn
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TopicPdfViewer(
+                              url: course!.topics[index].nameFile,
+                              title: course!.topics[index].name,
+                            ),
+                          ),
+                        );
                       },
                       child: ListTile(
                         // ignore: prefer_interpolation_to_compose_strings
-                        title: Text((index + 1).toString() + '. '+ course!.topics[index].name), // Tên của chủ đề
+                        title: Text((index + 1).toString() + '. '+ course!.topics[index].name),
                       ),
                     );
                   },

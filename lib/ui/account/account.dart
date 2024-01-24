@@ -5,6 +5,7 @@ import 'package:final_project/services/models/schedule/booking_infor_model.dart'
 import 'package:final_project/services/models/user/user_information_model.dart';
 import 'package:final_project/ui/account/profile.dart';
 import 'package:final_project/ui/auth/login.dart';
+import 'package:final_project/utils/join_meeting.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/account/setting.dart';
 import 'package:timer_count_down/timer_count_down.dart';
@@ -144,7 +145,10 @@ class _AccountPageState extends State<AccountPage> {
                                 int hours = (time / 3600).floor();
                                 int minutes = ((time % 3600) / 60).floor();
                                 int seconds = (time % 60).floor();
-                                return Text('Còn: $hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+
+                                String formattedHours = hours < 10 ? '0$hours' : '$hours';
+
+                                return Text('Còn: $formattedHours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                                   style: const TextStyle(fontSize: 18.0));
                               },
                               interval: const Duration(milliseconds: 100),
@@ -156,7 +160,8 @@ class _AccountPageState extends State<AccountPage> {
                             children: <Widget>[
                               ElevatedButton(
                                 onPressed: () {
-                                  // Xử lý khi nút được nhấn
+                                  print("Vào lớp học");
+                                  joinMeeting(nextClass);
                                 },
                                 child: const Text('Vào lớp học'),
                               ),
