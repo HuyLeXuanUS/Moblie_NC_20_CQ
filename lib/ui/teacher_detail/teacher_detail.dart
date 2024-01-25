@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_schedule.dart';
 import 'package:final_project/services/api/api_tutor.dart';
 import 'package:final_project/services/models/schedule/schedule_model.dart';
@@ -151,11 +152,11 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                 ),
                 appBar: AppBar(
                   backgroundColor: const Color.fromARGB(255, 141, 204, 213),
-                  title: const Row(
+                  title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Thông tin gia sư',
-                          style: TextStyle(
+                      Text(S.of(context).tutor_information,
+                          style: const TextStyle(
                             fontSize: 20,
                             color: Color.fromARGB(255, 3, 117, 210),
                             fontFamily: 'MyFont',
@@ -259,10 +260,11 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                         // Xử lý khi nhấn nút "Chat"
                                       },
                                     ),
-                                    const Text('Chat'),
+                                    Text(S.of(context).chat),
                                   ],
                                 ),
                                 Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () async {
@@ -273,8 +275,9 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                         showTopSnackBar(
                                         // ignore: use_build_context_synchronously
                                           Overlay.of(context),
-                                          const CustomSnackBar.success(
-                                            message: "Cập nhật giáo viên yêu thích thành công",
+                                          CustomSnackBar.success(
+                                            // ignore: use_build_context_synchronously
+                                            message: S.of(context).successfully_updated_favorite_teachers,
                                           ),
                                           displayDuration: const Duration(seconds: 0),
                                         );
@@ -287,7 +290,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                         color: Colors.red,
                                       ),
                                     ),
-                                    const Text('Favorite'),
+                                    Text(S.of(context).favorite),
                                   ],
                                 ),
 
@@ -300,7 +303,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                         // Xử lý khi nhấn nút "Report"
                                       },
                                     ),
-                                    const Text('Report'),
+                                    Text(S.of(context).report),
                                   ],
                                 ),
                               ],
@@ -317,12 +320,12 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                             const SizedBox(height: 16.0),
                             Container(
                               padding: const EdgeInsets.only(left: 16.0),
-                              child: const Row(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Học vấn',
-                                    style: TextStyle(
+                                    S.of(context).education,
+                                    style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -344,13 +347,13 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Row(
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Ngôn ngữ',
-                                        style: TextStyle(
+                                        S.of(context).languages,
+                                        style: const TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -374,13 +377,13 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Row(
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Chuyên ngành',
-                                        style: TextStyle(
+                                        S.of(context).specialties,
+                                        style: const TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -423,12 +426,12 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                             ),
                             Container(
                               padding: const EdgeInsets.only(left: 16.0),
-                              child: const Row(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Sở thích',
-                                    style: TextStyle(
+                                    S.of(context).interests,
+                                    style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -447,12 +450,12 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                             ),
                             Container(
                               padding: const EdgeInsets.only(left: 16.0),
-                              child: const Row(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Kinh nghiệm giảng dạy',
-                                    style: TextStyle(
+                                    S.of(context).teaching_experience,
+                                    style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -483,7 +486,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                               isExpanded = expanding;
                             });
                           },
-                          title: const Text('Đặt lịch học'),
+                          title: Text(S.of(context).book_schedule),
                           children: [
                             loadingSchedule
                                 ? const Center(
@@ -501,10 +504,10 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                     ),
                                   )
                                 : listSchedules.isEmpty
-                                    ? const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text('Chưa có lịch học nào',
-                                            style: TextStyle(fontSize: 14.0)),
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(S.of(context).no_class_schedules_yet,
+                                            style: const TextStyle(fontSize: 14.0)),
                                       )
                                     : ListView.builder(
                                         shrinkWrap: true,
@@ -516,13 +519,13 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                                         }),
                           ]),
                       ExpansionTile(
-                        title: const Text('Người khác đánh giá'),
+                        title: Text(S.of(context).others_review),
                         children: [
                           widget.listFeedback!.isEmpty
-                              ? const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text('Chưa có đánh giá nào',
-                                      style: TextStyle(fontSize: 14.0)),
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(S.of(context).no_reviews_yet,
+                                      style: const TextStyle(fontSize: 14.0)),
                                 )
                               : ListView.builder(
                                   shrinkWrap: true,
@@ -592,8 +595,8 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                             showTopSnackBar(
                               // ignore: use_build_context_synchronously
                               Overlay.of(context),
-                              const CustomSnackBar.success(
-                                message: "Đặt lịch học thành công",
+                              CustomSnackBar.success(
+                                message: S.of(context).book_schedule_successfully,
                               ),
                               displayDuration: const Duration(seconds: 0),
                             );
@@ -601,8 +604,9 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                             showTopSnackBar(
                               // ignore: use_build_context_synchronously
                               Overlay.of(context),
-                              const CustomSnackBar.error(
-                                message: "Đặt lịch học thất bại",
+                              CustomSnackBar.error(
+                                // ignore: use_build_context_synchronously
+                                message: S.of(context).book_schedule_failed,
                               ),
                               displayDuration: const Duration(seconds: 0),
                             );
@@ -611,8 +615,9 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                           showTopSnackBar(
                             // ignore: use_build_context_synchronously
                             Overlay.of(context),
-                            const CustomSnackBar.error(
-                              message: "Đặt lịch học thất bại",
+                            CustomSnackBar.error(
+                              // ignore: use_build_context_synchronously
+                              message: S.of(context).book_schedule_failed,
                             ),
                             displayDuration: const Duration(seconds: 0),
                           );
@@ -626,10 +631,10 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                   DateTime.fromMillisecondsSinceEpoch(schedule.startTimestamp)
                           .isBefore(
                               DateTime.now().add(const Duration(hours: 2)))
-                      ? 'Đã hết hạn đặt lịch'
+                      ? S.of(context).appointment_deadline_expires
                       : schedule.isBooked
-                          ? 'Đã đặt lịch học'
-                          : 'Đặt lịch học',
+                          ? S.of(context).booked
+                          : S.of(context).book_button,
                   style: TextStyle(
                     color: schedule.isBooked ||
                             DateTime.fromMillisecondsSinceEpoch(
@@ -694,7 +699,7 @@ class _TeacherDetailState extends State<TeacherDetailPage> {
                 onRatingUpdate: (rating) {},
               ),
               Text(
-                widget.listFeedback?[index].content ?? "Không có nhận xét",
+                widget.listFeedback?[index].content ?? S.of(context).no_reviews_yet,
                 style: const TextStyle(fontSize: 14),
               ),
             ],

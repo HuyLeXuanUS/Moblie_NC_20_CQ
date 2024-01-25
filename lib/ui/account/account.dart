@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_schedule.dart';
 import 'package:final_project/services/api/api_user.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
@@ -11,14 +12,14 @@ import 'package:final_project/ui/account/setting.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+  const AccountPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _AccountPageState createState() => _AccountPageState();
+  AccountPageState createState() => AccountPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+class AccountPageState extends State<AccountPage> {
   UserInfo? user;
   Duration? totalHourLesson;
   BookingInfo? nextClass;
@@ -128,9 +129,9 @@ class _AccountPageState extends State<AccountPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          const Center(
-                            child: Text("Buổi học sắp tới",
-                              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),     
+                          Center(
+                            child: Text(S.of(context).upcoming_lesson,
+                              style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),     
                           ),
                           const SizedBox(height: 16.0),
                           Center(
@@ -148,7 +149,8 @@ class _AccountPageState extends State<AccountPage> {
 
                                 String formattedHours = hours < 10 ? '0$hours' : '$hours';
 
-                                return Text('Còn: $formattedHours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                                // ignore: prefer_interpolation_to_compose_strings
+                                return Text(S.of(context).start_in + ': $formattedHours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                                   style: const TextStyle(fontSize: 18.0));
                               },
                               interval: const Duration(milliseconds: 100),
@@ -163,7 +165,7 @@ class _AccountPageState extends State<AccountPage> {
                                   print("Vào lớp học");
                                   joinMeeting(nextClass);
                                 },
-                                child: const Text('Vào lớp học'),
+                                child: Text(S.of(context).come_in_class),
                               ),
                             ],
                           ),
@@ -183,16 +185,17 @@ class _AccountPageState extends State<AccountPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text(
-                          'Tổng số giờ học',
-                          style: TextStyle(
+                        Text(
+                          S.of(context).total_lesson_time,
+                          style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '${totalHourLesson!.inHours} giờ ${totalHourLesson!.inMinutes.remainder(60)} phút',
+                          // ignore: prefer_interpolation_to_compose_strings, prefer_adjacent_string_concatenation
+                          '${totalHourLesson!.inHours}' + " " + S.of(context).hours + " " +'${totalHourLesson!.inMinutes.remainder(60) }' + " " + S.of(context).minutes,
                           style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -219,9 +222,9 @@ class _AccountPageState extends State<AccountPage> {
                               getUserProfile();
                             });
                           },
-                          child: const Text(
-                            'Hồ sơ',
-                            style: TextStyle(
+                          child: Text(
+                            S.of(context).profile,
+                            style: const TextStyle(
                               fontSize: 15,
                               color: Colors.white,
                             ),
@@ -234,16 +237,20 @@ class _AccountPageState extends State<AccountPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
+                          onPressed: () async {
+                            await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => const SettingPage(),
                               ),
-                            );
+                            )
+                            .then((value) {
+                              setState(() {
+                              });
+                            });
                           },
-                          child: const Text(
-                            'Cài đặt',
-                            style: TextStyle(
+                          child: Text(
+                            S.of(context).setting,
+                            style: const TextStyle(
                               fontSize: 15,
                               color: Colors.white,
                             ),
@@ -265,9 +272,9 @@ class _AccountPageState extends State<AccountPage> {
                               (route) => false,
                             );
                           },
-                          child: const Text(
-                            'Đăng xuất',
-                            style: TextStyle(
+                          child: Text(
+                            S.of(context).logout,
+                            style: const TextStyle(
                               fontSize: 15,
                               color: Colors.white,
                             ),

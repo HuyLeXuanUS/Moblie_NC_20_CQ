@@ -1,7 +1,8 @@
 // ignore_for_file: unused_field, prefer_final_fields
-
+import 'package:final_project/services/share_local/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/generated/l10n.dart';
+import 'package:provider/provider.dart';
 
 
 // Màn hình chi cài đặt
@@ -14,16 +15,31 @@ class SettingPage extends StatefulWidget{
 }
 
 class _SettingState extends State<SettingPage>{
-  String? selectedLanguage = 'vi';
-  String? selectedTheme = 'Sáng';
-
-  // ignore: non_constant_identifier_names
-  Locale _locale_vn = const Locale('vn');
-  // ignore: non_constant_identifier_names
-  Locale _locale_en = const Locale('en');
+  String? selectedLanguage = '';
+  String? selectedTheme = '';
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SettingsProvider>(context);
+    selectedLanguage = provider.language;
+    if (provider.language == 'vi')
+    {
+      selectedLanguage = S.of(context).vietnamese;
+    }
+    else
+    {
+      selectedLanguage = S.of(context).english;
+    }
+    
+    if (provider.theme == 'light')
+    {
+      selectedTheme = S.of(context).light;
+    }
+    else
+    {
+      selectedTheme = S.of(context).dark;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 141, 204, 213), // Đặt màu nền thành màu trắng
@@ -45,14 +61,14 @@ class _SettingState extends State<SettingPage>{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text('Ngôn ngữ', style: TextStyle(fontSize: 16)),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(S.of(context).language, style: const TextStyle(fontSize: 16)),
               ),
               DropdownButton<String>(
                 value: selectedLanguage,
                 alignment: Alignment.center, // Đặt vị trí theo mong muốn
-                items: <String>['vi', 'en']
+                items: <String>[S.of(context).vietnamese, S.of(context).english]
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -61,8 +77,15 @@ class _SettingState extends State<SettingPage>{
                 }).toList(),
                 onChanged: (String? value) {
                   setState(() {
-                    selectedLanguage = value;
-                    S.load(Locale(value.toString()));
+                    if (value == S.of(context).vietnamese)
+                    {
+                      provider.updateLanguage('vi');
+                    }
+                    else
+                    {
+                      provider.updateLanguage('en');
+                    }
+                    S.load(Locale(provider.language.toString()));
                   });
                 },
               ),
@@ -79,7 +102,7 @@ class _SettingState extends State<SettingPage>{
               DropdownButton<String>(
                 value: selectedTheme,
                 alignment: Alignment.center,
-                items: <String>['Sáng', 'Tối']
+                items: <String>[S.of(context).light, S.of(context).dark]
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -88,7 +111,14 @@ class _SettingState extends State<SettingPage>{
                 }).toList(),
                 onChanged: (String? value) {
                   setState(() {
-                    selectedTheme = value;
+                    if (value == S.of(context).light)
+                    {
+                      provider.updateTheme('light');
+                    }
+                    else
+                    {
+                      provider.updateTheme('dark');
+                    }
                   });
                 },
               ),

@@ -4,7 +4,7 @@ import 'package:final_project/utils/validate_email.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/services/api/api_auth.dart';
 import 'package:final_project/services/models/user/user_model.dart';
-import 'package:final_project/services/api/token_manager.dart';
+import 'package:final_project/services/share_local/token_manager.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -166,7 +166,8 @@ class _LoginState extends State<LoginPage> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const MyHomePage(),
+                                    // ignore: prefer_const_constructors
+                                    builder: (context) => MyHomePage(),
                                   ),
                                 );
                               }

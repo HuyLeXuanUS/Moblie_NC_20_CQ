@@ -1,3 +1,4 @@
+import 'package:final_project/services/share_local/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/auth/login.dart';
 import 'package:final_project/ui/list_teacher/list_teacher.dart';
@@ -7,9 +8,15 @@ import 'package:final_project/ui/list_history/list_history.dart';
 import 'package:final_project/ui/account/account.dart';
 import 'package:final_project/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 
-void main() {runApp(MyApp());}
+void main() {runApp(
+  ChangeNotifierProvider(
+    create: (context) => SettingsProvider(),
+    child: MyApp(),
+  ),
+);}
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -25,6 +32,9 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         S.delegate,
       ],
+      supportedLocales: [
+        Locale('vi', ''),
+      ],
       home: LoginPage(),
     );
   }
@@ -39,9 +49,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0; // Chỉ số của mục đang được chọn
+  int _currentIndex = 0;
+  // ignore: prefr_final_fields
 
-  final List<Widget> _pages = [
+  List<Widget> get _pages => [
     const ListTeacherPage(),
     const SchedulePage(),
     const HistoryPage(),
@@ -57,28 +68,28 @@ class _MyHomePageState extends State<MyHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.co_present),
-            label: 'Gia sư',
+            label: 'Tutor',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_chart),
-            label: 'Lịch học',
+            label: 'Schedule',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'Lịch sử',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_stories),
-            label: 'Khóa học',
+            label: 'Course',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Tài khoản',
+            label: 'Account',
           ),
         ],
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
-        onTap: (index) {
+        onTap: (index) async {
           setState(() {
             _currentIndex = index;
           });

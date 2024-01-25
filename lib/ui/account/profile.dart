@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_user.dart';
 import 'package:final_project/services/models/topic_and_test_preparation/learning_topic_model.dart';
 import 'package:final_project/services/models/topic_and_test_preparation/test_preparation_model.dart';
@@ -113,11 +114,11 @@ class _ProfileState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(
             255, 141, 204, 213), // Đặt màu nền thành màu trắng
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Chỉnh sửa hồ sơ',
-                style: TextStyle(
+            Text(S.of(context).edit_profile,
+                style: const TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 3, 117, 210),
                   fontFamily: 'MyFont',
@@ -169,8 +170,8 @@ class _ProfileState extends State<ProfilePage> {
                 showTopSnackBar(
                 // ignore: use_build_context_synchronously
                   Overlay.of(context),
-                  const CustomSnackBar.success(
-                    message: "Cập nhật thành công",
+                  CustomSnackBar.success(
+                    message: S.of(context).update_profile_successfully,
                   ),
                   displayDuration: const Duration(seconds: 0),
                 );
@@ -178,8 +179,9 @@ class _ProfileState extends State<ProfilePage> {
                 showTopSnackBar(
                 // ignore: use_build_context_synchronously
                   Overlay.of(context),
-                  const CustomSnackBar.error(
-                    message: "Cập nhật thất bại",
+                  CustomSnackBar.error(
+                    // ignore: use_build_context_synchronously
+                    message: S.of(context).update_profile_failed,
                   ),
                   displayDuration: const Duration(seconds: 0),
                 );
@@ -294,8 +296,8 @@ class _ProfileState extends State<ProfilePage> {
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: const Text('Đổi mật khẩu',
-                            style: TextStyle(fontSize: 16)),
+                        child: Text(S.of(context).change_password,
+                            style: const TextStyle(fontSize: 16)),
                       ),
                     ],
                   ),
@@ -307,7 +309,8 @@ class _ProfileState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Tên: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).name + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   TextField(
                     controller: nameController,
@@ -319,7 +322,8 @@ class _ProfileState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  const Text('Địa chỉ email: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).email_address + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   TextField(
                     enabled: false,
@@ -332,7 +336,8 @@ class _ProfileState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  const Text('Quốc gia: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).email_address + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   DropdownButtonFormField(
                     value: selectedCountry,
@@ -363,7 +368,8 @@ class _ProfileState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  const Text('Số điện thoại: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).phone_number + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   TextField(
                     enabled: false,
@@ -376,7 +382,8 @@ class _ProfileState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  const Text('Ngày sinh: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).birthday + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   TextField(
                     controller: birthdayController,
@@ -391,7 +398,8 @@ class _ProfileState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  const Text('Trình độ: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).my_level + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   DropdownButtonFormField(
                     value: selectedLevel,
@@ -424,10 +432,12 @@ class _ProfileState extends State<ProfilePage> {
                   const SizedBox(height: 15),
                   MultiSelectDialogField(
                     items: items,
-                    title: const Text('Lựa chọn chủ đề muốn học: ',
-                        style: TextStyle(fontSize: 16)),
-                    buttonText: const Text('Muốn học: ',
-                        style: TextStyle(fontSize: 16)),
+                    // ignore: prefer_interpolation_to_compose_strings
+                    title: Text(S.of(context).choose_the_topic_you_want_to_learn + ': ',
+                        style: const TextStyle(fontSize: 16)),
+                    // ignore: prefer_interpolation_to_compose_strings
+                    buttonText: Text(S.of(context).want_to_learn + ': ',
+                        style: const TextStyle(fontSize: 16)),
                     initialValue:
                         stringSelectedTopic + stringSelectedTestPreparation,
                     onConfirm: (values) {
@@ -437,7 +447,8 @@ class _ProfileState extends State<ProfilePage> {
                     },
                   ),
                   const SizedBox(height: 15),
-                  const Text('Lịch học: ', style: TextStyle(fontSize: 16)),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  Text(S.of(context).study_schedule + ': ', style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 5),
                   TextField(
                     controller: studyScheduleController,

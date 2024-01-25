@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/setting/learning_topics.dart';
 import 'package:final_project/services/setting/test_preparation.dart';
 import 'package:flutter/material.dart';
@@ -163,8 +164,9 @@ class _ListTeacherState extends State<ListTeacherPage> {
         backgroundColor: const Color.fromARGB(255, 141, 204, 213),
         title: TextField(
           controller: nameTutorController,
-          decoration: const InputDecoration(
-            hintText: 'Nhập tên gia sư...',
+          decoration: InputDecoration(
+            // ignore: prefer_interpolation_to_compose_strings
+            hintText: S.of(context).enter_tutor_name + '...',
           ),
         ),
         actions: [
@@ -336,8 +338,10 @@ class _ListTeacherState extends State<ListTeacherPage> {
                     showTopSnackBar(
                     // ignore: use_build_context_synchronously
                       Overlay.of(context),
-                      const CustomSnackBar.success(
-                        message: "Cập nhật giáo viên yêu thích thành công",
+                      CustomSnackBar.success(
+                        // ignore: use_build_context_synchronously
+                        message: S.of(context)
+                            .successfully_updated_favorite_teachers,
                       ),
                       displayDuration: const Duration(seconds: 0),
                     );
@@ -395,13 +399,13 @@ class _ListTeacherState extends State<ListTeacherPage> {
                       ),
                     );
                   },
-                  child: const Text('Book'),
+                  child: Text(S.of(context).book),
                 ),
                 TextButton(
                   onPressed: () {
                     // Xử lý khi nhấn nút "Chat"
                   },
-                  child: const Text('Chat'),
+                  child: Text(S.of(context).chat),
                 ),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_course.dart';
 import 'package:final_project/services/setting/course_level.dart';
 import 'package:final_project/services/models/course/course_model.dart';
@@ -52,11 +53,11 @@ class _CourseDetailState extends State<CourseDetailPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(
             255, 141, 204, 213),
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Thông tin khóa học',
-                style: TextStyle(
+            Text(S.of(context).course_information,
+                style: const TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 3, 117, 210),
                   fontFamily: 'MyFont',
@@ -119,17 +120,19 @@ class _CourseDetailState extends State<CourseDetailPage> {
             ),
             // Mục Tổng quan
             ExpansionTile(
-              title: const Text('Tổng quan'),
+              title: Text(S.of(context).overview),
               children: [
                 ListTile(
-                  title: const Text('❓ Tại sao bạn nên học khóa học này?'),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  title: Text('❓ ' + S.of(context).why_take_this_course),
                   subtitle: Text(
                     course!.reason,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
                 ListTile(
-                  title: const Text('❓ Bạn có thể làm gì?'),
+                  // ignore: prefer_interpolation_to_compose_strings
+                  title: Text('❓ ' +  S.of(context).what_will_you_be_able_to_do),
                   subtitle:
                     Text(
                       course!.purpose,
@@ -140,7 +143,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
             ),
             const Divider(),
             ListTile(
-              title: const Text('Trình độ yêu cầu'),
+              title: Text(S.of(context).experience_level),
               subtitle: Text(
                 course_level[int.parse(course!.level)],
                 style: const TextStyle(fontSize: 16),
@@ -148,7 +151,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
             ),
             const Divider(),
             ListTile(
-              title: const Text('Thời lượng khóa học'),
+              title: Text(S.of(context).course_length),
               subtitle: Text(
                   // ignore: prefer_interpolation_to_compose_strings
                   course!.topics.length.toString()+' '+'Lessons',
@@ -157,7 +160,7 @@ class _CourseDetailState extends State<CourseDetailPage> {
             ),
             const Divider(),
             ExpansionTile(
-              title: const Text('Danh sách chủ đề'),
+              title: Text(S.of(context).list_topics),
               children: [
                 ListView.builder(
                   shrinkWrap:

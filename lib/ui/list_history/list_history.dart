@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_schedule.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:flutter/material.dart';
@@ -118,12 +119,12 @@ class _HistoryState extends State<HistoryPage> {
                     String studentRequest =
                         listHistoryBooking![index].studentRequest.toString();
                     if (studentRequest == "null") {
-                      studentRequest = "Không có yêu cầu cho buổi học";
+                      studentRequest = S.of(context).no_requests_for_this_class;
                     }
                     String tutorReview =
                         listHistoryBooking![index].tutorReview.toString();
                     if (tutorReview == "null") {
-                      tutorReview = "Không có dánh giá của gia sư";
+                      tutorReview = S.of(context).no_reviews_yet;
                     }
 
                     return _historyItem(date, timeStart, timeEnd, avatarUrl,
@@ -158,7 +159,7 @@ class _HistoryState extends State<HistoryPage> {
         children: <Widget>[
           Text(date, style: const TextStyle(fontSize: 18.0)),
           // ignore: prefer_interpolation_to_compose_strings
-          Text("Giờ học: " + timeStart + " - " + timeEnd,
+          Text(S.of(context).time_study + ": " + timeStart + " - " + timeEnd,
               style: const TextStyle(fontSize: 18.0)),
           const SizedBox(height: 16.0),
           Row(
@@ -191,8 +192,8 @@ class _HistoryState extends State<HistoryPage> {
           ),
           const SizedBox(height: 16.0),
           ExpansionTile(
-            title: const Text("Yêu cầu buổi học",
-                style: TextStyle(fontSize: 17.0)),
+            title: Text(S.of(context).request_lesson,
+                style: const TextStyle(fontSize: 17.0)),
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.all(16.0),
@@ -205,8 +206,8 @@ class _HistoryState extends State<HistoryPage> {
             ],
           ),
           ExpansionTile(
-            title: const Text("Đánh giá của gia sư",
-                style: TextStyle(fontSize: 17.0)),
+            title: Text(S.of(context).tutor_review,
+                style: const TextStyle(fontSize: 17.0)),
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.all(16.0),
@@ -238,7 +239,7 @@ class _HistoryState extends State<HistoryPage> {
                 onPressed: () {
                   // Xử lý khi nút được nhấn
                 },
-                child: const Text('Đánh giá buổi học'),
+                child: Text(S.of(context).evaluate_the_lesson),
               ),
             ],
           ),

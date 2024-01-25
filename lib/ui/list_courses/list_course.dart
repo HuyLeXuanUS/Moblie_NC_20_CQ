@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_course.dart';
 import 'package:final_project/services/setting/course_level.dart';
 import 'package:final_project/services/models/course/course_model.dart';
@@ -132,8 +133,9 @@ class _ListCourseState extends State<ListCoursePage> {
         backgroundColor: const Color.fromARGB(255, 141, 204, 213),
         title: TextField(
           controller: searchController,
-          decoration: const InputDecoration(
-            hintText: 'Nhập tên khóa học...',
+          decoration: InputDecoration(
+            // ignore: prefer_interpolation_to_compose_strings
+            hintText: S.of(context).enter_course_name + '...',
           ),
         ),
         actions: [

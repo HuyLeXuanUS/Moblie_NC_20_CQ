@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_schedule.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:flutter/material.dart';
@@ -129,13 +130,11 @@ class _ScheduleState extends State<SchedulePage> {
                           String studentRequest =
                               listBooking![index].studentRequest.toString();
                           if (studentRequest == "null") {
-                            studentRequest = "Không có yêu cầu cho buổi học";
+                            studentRequest = S.of(context).no_requests_for_this_class;
                           }
                           String detailId = listBooking![index]
                               .id
                               .toString();
-
-                          //print(detailId);
 
                           return _scheduleItem(startDateTime, datetime,
                               avatarUrl, name, studentRequest, detailId);
@@ -158,15 +157,15 @@ class _ScheduleState extends State<SchedulePage> {
                       },
                     ),
                   )
-                : const Center(
+                : Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.warning, color: Colors.orange, size: 48),
-                        SizedBox(height: 8),
+                        const Icon(Icons.warning, color: Colors.orange, size: 48),
+                        const SizedBox(height: 8),
                         Text(
-                          "Chưa có lịch học nào",
-                          style: TextStyle(fontSize: 20),
+                          S.of(context).no_class_schedules_yet,
+                          style: const TextStyle(fontSize: 20),
                         ),
                       ],
                     ),
@@ -239,8 +238,9 @@ class _ScheduleState extends State<SchedulePage> {
                         showTopSnackBar(
                           // ignore: use_build_context_synchronously
                           Overlay.of(context),
-                          const CustomSnackBar.error(
-                            message: "Hủy lớp học thành công",
+                          CustomSnackBar.error(
+                            // ignore: use_build_context_synchronously
+                            message: S.of(context).cancel_class_successfully,
                           ),
                           displayDuration: const Duration(seconds: 0),
                         );
@@ -249,9 +249,9 @@ class _ScheduleState extends State<SchedulePage> {
                         side: const BorderSide(color: Colors.red),
                         backgroundColor: Colors.white,
                       ),
-                      child: const Text(
-                        'Hủy lớp học',
-                        style: TextStyle(color: Colors.red),
+                      child: Text(
+                        S.of(context).cancel_class,
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                   ],
@@ -263,13 +263,13 @@ class _ScheduleState extends State<SchedulePage> {
                       onPressed: () {
                         // Xử lý khi nút được nhấn
                       },
-                      child: const Text('Vào lớp học'),
+                      child: Text(S.of(context).come_in_class),
                     ),
                   ],
                 ),
           ExpansionTile(
-            title: const Text("Yêu cầu buổi học",
-                style: TextStyle(fontSize: 17.0)),
+            title: Text(S.of(context).request_lesson,
+                style: const TextStyle(fontSize: 17.0)),
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.all(16.0),
