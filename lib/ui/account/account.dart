@@ -162,7 +162,6 @@ class AccountPageState extends State<AccountPage> {
                             children: <Widget>[
                               ElevatedButton(
                                 onPressed: () {
-                                  print("Vào lớp học");
                                   joinMeeting(nextClass);
                                 },
                                 child: Text(S.of(context).come_in_class),

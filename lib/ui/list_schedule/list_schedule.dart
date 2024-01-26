@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_schedule.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
+import 'package:final_project/utils/join_meeting.dart';
 import 'package:flutter/material.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -137,7 +138,7 @@ class _ScheduleState extends State<SchedulePage> {
                               .toString();
 
                           return _scheduleItem(startDateTime, datetime,
-                              avatarUrl, name, studentRequest, detailId);
+                              avatarUrl, name, studentRequest, detailId, listBooking![index]);
                         }
                         if (index >= listBooking!.length && (loading)) {
                           Timer(const Duration(milliseconds: 30), () {
@@ -174,7 +175,7 @@ class _ScheduleState extends State<SchedulePage> {
   }
 
   Container _scheduleItem(DateTime startDateTime, String datetime,
-      String avatar, String name, String studentRequest, String detailId) {
+      String avatar, String name, String studentRequest, String detailId, BookingInfo nextClass) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(16.0),
@@ -261,7 +262,7 @@ class _ScheduleState extends State<SchedulePage> {
                   children: <Widget>[
                     ElevatedButton(
                       onPressed: () {
-                        // Xử lý khi nút được nhấn
+                        joinMeeting(nextClass);
                       },
                       child: Text(S.of(context).come_in_class),
                     ),
