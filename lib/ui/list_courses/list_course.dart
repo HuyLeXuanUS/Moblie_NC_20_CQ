@@ -176,35 +176,58 @@ class _ListCourseState extends State<ListCoursePage> {
           ),
         ],
       ),
-      body: Scrollbar(
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          controller: _scrollController,
-          itemCount: listViewCourse!.length + 1,
-          itemBuilder: (context, index) {
-            if (index < listViewCourse!.length) {
-              return _courseItem(context, listViewCourse![index], index);
-            }
-            if (index >= listViewCourse!.length && (loading)) {
-              Timer(const Duration(milliseconds: 30), () {
-                _scrollController!.jumpTo(
-                  _scrollController!.position.maxScrollExtent,
-                );
-              });
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Center(
-                  child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor),
-                ),
-              );
-            }
-            return const SizedBox();
-          },
-        ),
-      ),
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Scaffold(
+              body: listViewCourse == null || listViewCourse!.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.warning,
+                              color: Colors.orange, size: 48),
+                          const SizedBox(height: 8),
+                          Text(
+                            S.of(context).no_courses_found,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Scrollbar(
+                      child: ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        controller: _scrollController,
+                        itemCount: listViewCourse!.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index < listViewCourse!.length) {
+                            return _courseItem(
+                                context, listViewCourse![index], index);
+                          }
+                          if (index >= listViewCourse!.length && (loading)) {
+                            Timer(const Duration(milliseconds: 30), () {
+                              _scrollController!.jumpTo(
+                                _scrollController!.position.maxScrollExtent,
+                              );
+                            });
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                    ),
+            ),
     );
   }
 

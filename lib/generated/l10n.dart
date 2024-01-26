@@ -374,6 +374,16 @@ class S {
     );
   }
 
+  /// 'No courses found'
+  String get no_courses_found {
+    return Intl.message(
+      'No courses found',
+      name: 'no_courses_found',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// Course detail page
   /// 'Cource information'
   String get course_information {

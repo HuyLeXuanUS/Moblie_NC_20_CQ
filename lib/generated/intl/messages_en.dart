@@ -86,5 +86,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("English"),
         "light": MessageLookupByLibrary.simpleMessage("Light"),
         "dark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "no_courses_found": MessageLookupByLibrary.simpleMessage("No courses found"),
       };
 }
