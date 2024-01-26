@@ -1,4 +1,5 @@
 import 'package:final_project/main.dart';
+import 'package:final_project/ui/auth/forgot_password.dart';
 import 'package:final_project/ui/auth/register.dart';
 import 'package:final_project/utils/validate_email.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,13 @@ class _LoginState extends State<LoginPage> {
                         alignment: Alignment.centerLeft,
                         child: TextButton(
                           onPressed: () {
-                            // Xử lí sự kiện quên mật khẩu
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordPage(),
+                              ),
+                            );
                           },
                           child: const Text('Quên mật khẩu?'),
                         ),
