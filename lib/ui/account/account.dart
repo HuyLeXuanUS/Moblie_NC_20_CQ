@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/generated/l10n.dart';
 import 'package:final_project/services/api/api_schedule.dart';
@@ -26,10 +28,31 @@ class AccountPageState extends State<AccountPage> {
 
   bool loading = false;
 
+  late DateTime startTime;
+  late Duration elapsedTime = const Duration(seconds: 0);
+  late Timer timer;
+
   @override
   void initState() {
     super.initState();
     getUserProfile();
+
+    startTime = DateTime.now();
+    elapsedTime = const Duration(seconds: 0);
+
+    //Start the timer to update the elapsed time every second
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      setState(() {
+        elapsedTime = DateTime.now().difference(startTime);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the timer when the widget is disposed
+    timer.cancel();
+    super.dispose();
   }
 
   Future<void> getUserProfile() async {
@@ -42,10 +65,16 @@ class AccountPageState extends State<AccountPage> {
     user = await UserFunctions.getUserInformation();
     final total = await ScheduleFunctions.getTotalHourLesson();
     final next = await ScheduleFunctions.getNextClass();
+
     if (mounted) {
       setState(() {
         totalHourLesson = Duration(minutes: total);
         nextClass = next;
+
+        startTime = DateTime.fromMillisecondsSinceEpoch(
+            nextClass!.scheduleDetailInfo!.startPeriodTimestamp);
+        elapsedTime = DateTime.now().difference(startTime);
+
         loading = false;
       });
     }
@@ -110,68 +139,140 @@ class AccountPageState extends State<AccountPage> {
                   ),
                   const SizedBox(height: 20),
                   // Next class
-                  nextClass != null
-                  ? Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Center(
-                            child: Text(S.of(context).upcoming_lesson,
-                              style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),     
-                          ),
-                          const SizedBox(height: 16.0),
-                          Center(
-                            child: Text(datetime,
-                              style: const TextStyle(fontSize: 18.0)),     
-                          ),
-                          const SizedBox(height: 16.0),
-                          Center(
-                            child: Countdown(
-                              seconds: datetimeStart.difference(DateTime.now()).inSeconds.toInt(), 
-                              build: (BuildContext context, double time) {
-                                int hours = (time / 3600).floor();
-                                int minutes = ((time % 3600) / 60).floor();
-                                int seconds = (time % 60).floor();
-
-                                String formattedHours = hours < 10 ? '0$hours' : '$hours';
-
-                                // ignore: prefer_interpolation_to_compose_strings
-                                return Text(S.of(context).start_in + ': $formattedHours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                                  style: const TextStyle(fontSize: 18.0));
-                              },
-                              interval: const Duration(milliseconds: 100),
-                              onFinished: () {},
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              ElevatedButton(
-                                onPressed: () {
-                                  joinMeeting(nextClass);
-                                },
-                                child: Text(S.of(context).come_in_class),
+                  nextClass != null &&
+                          nextClass!.scheduleDetailInfo!.startPeriodTimestamp >
+                              DateTime.now().millisecondsSinceEpoch
+                      ? Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: const Offset(0, 1),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    )
-                  : const SizedBox(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Center(
+                                child: Text(
+                                  S.of(context).upcoming_lesson,
+                                  style: const TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              const SizedBox(height: 16.0),
+                              Center(
+                                child: Text(datetime,
+                                    style: const TextStyle(fontSize: 18.0)),
+                              ),
+                              const SizedBox(height: 16.0),
+                              Center(
+                                child: Countdown(
+                                  seconds: datetimeStart
+                                      .difference(DateTime.now())
+                                      .inSeconds
+                                      .toInt(),
+                                  build: (BuildContext context, double time) {
+                                    int hours = (time / 3600).floor();
+                                    int minutes = ((time % 3600) / 60).floor();
+                                    int seconds = (time % 60).floor();
+
+                                    String formattedHours =
+                                        hours < 10 ? '0$hours' : '$hours';
+
+                                    return Text(
+                                        // ignore: prefer_interpolation_to_compose_strings
+                                        S.of(context).start_in +
+                                            ': $formattedHours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                                        style: const TextStyle(fontSize: 18.0));
+                                  },
+                                  interval: const Duration(milliseconds: 100),
+                                  onFinished: () async {
+                                    await getUserProfile();
+                                  },
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      joinMeeting(nextClass);
+                                    },
+                                    child: Text(S.of(context).come_in_class),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      : nextClass != null &&
+                              nextClass!.scheduleDetailInfo!
+                                      .startPeriodTimestamp <
+                                  DateTime.now().millisecondsSinceEpoch
+                          ? Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Center(
+                                    child: Text(
+                                      S.of(context).the_lesson_is_going_on,
+                                      style: const TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  Center(
+                                    child: Text(datetime,
+                                        style: const TextStyle(fontSize: 18.0)),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  Center(
+                                    child: Text(
+                                      formatElapsedTime(elapsedTime),
+                                      style: const TextStyle(fontSize: 18, color: Colors.red),
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: <Widget>[
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          joinMeeting(nextClass);
+                                        },
+                                        child:
+                                            Text(S.of(context).come_in_class),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
 
                   const SizedBox(height: 20),
                   Container(
@@ -194,7 +295,13 @@ class AccountPageState extends State<AccountPage> {
                         const SizedBox(height: 10),
                         Text(
                           // ignore: prefer_interpolation_to_compose_strings, prefer_adjacent_string_concatenation
-                          '${totalHourLesson!.inHours}' + " " + S.of(context).hours + " " +'${totalHourLesson!.inMinutes.remainder(60) }' + " " + S.of(context).minutes,
+                          '${totalHourLesson!.inHours}' +
+                              " " +
+                              S.of(context).hours +
+                              " " +
+                              '${totalHourLesson!.inMinutes.remainder(60)}' +
+                              " " +
+                              S.of(context).minutes,
                           style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -237,14 +344,14 @@ class AccountPageState extends State<AccountPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () async {
-                            await Navigator.of(context).push(
+                            await Navigator.of(context)
+                                .push(
                               MaterialPageRoute(
                                 builder: (context) => const SettingPage(),
                               ),
                             )
-                            .then((value) {
-                              setState(() {
-                              });
+                                .then((value) {
+                              setState(() {});
                             });
                           },
                           child: Text(
@@ -290,5 +397,17 @@ class AccountPageState extends State<AccountPage> {
 
   String getDate(DateTime dateTime) {
     return "${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year.toString()}"; // Định dạng ngày
+  }
+
+  String formatElapsedTime(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 }

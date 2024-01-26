@@ -87,5 +87,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "light": MessageLookupByLibrary.simpleMessage("Sáng"),
         "dark": MessageLookupByLibrary.simpleMessage("Tối"),
         "no_courses_found": MessageLookupByLibrary.simpleMessage("Không tìm thấy khóa học"),
+        "the_lesson_is_going_on": MessageLookupByLibrary.simpleMessage("Buổi học đang diễn ra"),
       };
 }

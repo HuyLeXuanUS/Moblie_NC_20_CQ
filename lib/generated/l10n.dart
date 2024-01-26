@@ -526,6 +526,16 @@ class S {
     );
   }
 
+  /// 'The lesson is going on'
+  String get the_lesson_is_going_on {
+    return Intl.message(
+      'The lesson is going on',
+      name: 'the_lesson_is_going_on',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// Profile page
   /// 'Edit profile'
   String get edit_profile {

@@ -195,7 +195,7 @@ class ScheduleFunctions {
 
         lessonList = lessonList
             .where((element) =>
-                element.scheduleDetailInfo!.startPeriodTimestamp > current)
+                element.scheduleDetailInfo!.endPeriodTimestamp > current)
             .toList();
         if (lessonList.isEmpty) {
           return null;
