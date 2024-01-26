@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'package:final_project/services/share_local/token_manager.dart';
 import 'package:final_project/services/models/schedule/booking_infor_model.dart';
 import 'package:final_project/services/models/schedule/schedule_model.dart';
-import 'package:final_project/services/setting/host_api.dart';
+import 'package:final_project/services/envs/enviroment.dart';
 
 class ScheduleFunctions {
+  static final String apiUrl = Enviroments.baseUrl;
   static Future<List<Schedule>?> getScheduleByTutorId(String tutorId) async {
     try {
       String? token = await TokenManager.getToken();

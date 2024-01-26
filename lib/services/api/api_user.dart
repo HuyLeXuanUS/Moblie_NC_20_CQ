@@ -1,13 +1,15 @@
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-import 'package:final_project/services/models/http_response_model.dart';import 'package:final_project/services/share_local/token_manager.dart';
+import 'package:final_project/services/models/http_response_model.dart';
+import 'package:final_project/services/share_local/token_manager.dart';
 import 'package:final_project/services/models/topic_and_test_preparation/learning_topic_model.dart';
 import 'package:final_project/services/models/topic_and_test_preparation/test_preparation_model.dart';
 import 'package:final_project/services/models/user/user_information_model.dart';
 import 'dart:convert';
-import 'package:final_project/services/setting/host_api.dart';
+import 'package:final_project/services/envs/enviroment.dart';
 
 class UserFunctions {
+  static final String apiUrl = Enviroments.baseUrl;
   static Future<Map<String, Object>> forgotPassword(String email) async {
     try {
       var url = Uri.https(apiUrl, 'user/forgotPassword');

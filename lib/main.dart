@@ -1,3 +1,4 @@
+import 'package:final_project/services/envs/enviroment.dart';
 import 'package:final_project/services/share_local/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:final_project/ui/auth/login.dart';
@@ -11,12 +12,28 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 
-void main() {runApp(
-  ChangeNotifierProvider(
-    create: (context) => SettingsProvider(),
-    child: MyApp(),
-  ),
-);}
+void main() {
+  // ignore: unused_local_variable, prefer_const_constructors
+  final flavor = String.fromEnvironment('FLAVOR');
+
+  if (flavor == 'dev') {
+    // ignore: unused_local_variable
+    Enviroments.setEnviroment(Enviroment.DEV);
+  } else if (flavor == 'product') {
+    // ignore: unused_local_variable
+    Enviroments.setEnviroment(Enviroment.PROD);
+  } else {
+    // ignore: unused_local_variable
+    Enviroments.setEnviroment(Enviroment.DEV);
+  }
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SettingsProvider(),
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});

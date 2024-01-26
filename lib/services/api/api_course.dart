@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'package:final_project/services/share_local/token_manager.dart';
 import 'package:final_project/services/models/course/course_caterogy_model.dart';
 import 'package:final_project/services/models/course/course_model.dart';
-import 'package:final_project/services/setting/host_api.dart';
+import 'package:final_project/services/envs/enviroment.dart';
 
 class CourseFunctions {
+  static final String apiUrl = Enviroments.baseUrl;
   static Future<List<Course>?> getListCourseWithPagination(
     int page,
     int size, {

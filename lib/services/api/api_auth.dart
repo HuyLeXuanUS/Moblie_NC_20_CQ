@@ -1,12 +1,14 @@
+import 'package:final_project/services/envs/enviroment.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-import 'package:final_project/services/setting/host_api.dart';
 import 'package:final_project/services/models/user/user_model.dart';
 import 'package:final_project/services/models/http_response_model.dart';
 import 'package:final_project/services/models/login_response_model.dart';
 import 'dart:convert';
 
 class AuthFunctions{
+  static final String apiUrl = Enviroments.baseUrl;
+  
   static Future<Map<String, Object>> login(User user) async {
     try {
       var url = Uri.https(apiUrl, 'auth/login');
