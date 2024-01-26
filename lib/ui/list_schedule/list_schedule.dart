@@ -66,116 +66,109 @@ class _ScheduleState extends State<SchedulePage> {
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor),
-          )
-        : Scaffold(
-            body: listBooking != null && listBooking!.isNotEmpty
-                ? Scrollbar(
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(
-                        parent: BouncingScrollPhysics(),
+    return Scaffold(
+      body: listBooking != null && listBooking!.isNotEmpty
+          ? Scrollbar(
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                controller: _scrollController,
+                itemCount: listBooking!.length + 1,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index < listBooking!.length) {
+                    // ignore: unused_local_variable
+                    DateTime startDateTime =
+                        DateTime.fromMillisecondsSinceEpoch(listBooking![index]
+                            .scheduleDetailInfo!
+                            .startPeriodTimestamp);
+
+                    // ignore: unused_local_variable
+                    DateTime endDateTime = DateTime.fromMillisecondsSinceEpoch(
+                        listBooking![index]
+                            .scheduleDetailInfo!
+                            .endPeriodTimestamp);
+
+                    // ignore: prefer_interpolation_to_compose_strings
+                    String timeStart = startDateTime.hour.toString().padLeft(2, '0') +
+                            ":" +
+                            startDateTime.minute.toString().padLeft(2, '0');
+                    // ignore: prefer_interpolation_to_compose_strings
+                    String timeEnd = endDateTime.hour.toString().padLeft(2, '0') +
+                            ":" +
+                            endDateTime.minute.toString().padLeft(2, '0');
+                    // ignore: prefer_interpolation_to_compose_strings
+                    String datetime =
+                        // ignore: prefer_interpolation_to_compose_strings
+                        getDate(startDateTime) +
+                            "   " +
+                            timeStart +
+                            " - " +
+                            timeEnd;
+                    String avatarUrl = listBooking![index]
+                        .scheduleDetailInfo!
+                        .scheduleInfo!
+                        .tutorInfo!
+                        .avatar
+                        .toString();
+                    String name = listBooking![index]
+                        .scheduleDetailInfo!
+                        .scheduleInfo!
+                        .tutorInfo!
+                        .name
+                        .toString();
+                    String studentRequest =
+                        listBooking![index].studentRequest.toString();
+                    if (studentRequest == "null") {
+                      studentRequest = S.of(context).no_requests_for_this_class;
+                    }
+                    String detailId = listBooking![index].id.toString();
+
+                    return _scheduleItem(startDateTime, datetime, avatarUrl,
+                        name, studentRequest, detailId, listBooking![index]);
+                  }
+                  if (index >= listBooking!.length && (loading)) {
+                    Timer(const Duration(milliseconds: 30), () {
+                      _scrollController!.jumpTo(
+                        _scrollController!.position.maxScrollExtent,
+                      );
+                    });
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor),
                       ),
-                      controller: _scrollController,
-                      itemCount: listBooking!.length + 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index < listBooking!.length) {
-                          // ignore: unused_local_variable
-                          DateTime startDateTime =
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  listBooking![index]
-                                      .scheduleDetailInfo!
-                                      .startPeriodTimestamp);
-
-                          // ignore: unused_local_variable
-                          DateTime endDateTime =
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  listBooking![index]
-                                      .scheduleDetailInfo!
-                                      .endPeriodTimestamp);
-
-                          // ignore: prefer_interpolation_to_compose_strings
-                          String timeStart = startDateTime.hour
-                                  .toString()
-                                  .padLeft(2, '0') +
-                              ":" +
-                              startDateTime.minute.toString().padLeft(2, '0');
-                          // ignore: prefer_interpolation_to_compose_strings
-                          String timeEnd = endDateTime.hour
-                                  .toString()
-                                  .padLeft(2, '0') +
-                                  ":" +
-                                  endDateTime.minute.toString().padLeft(2, '0');
-                          // ignore: prefer_interpolation_to_compose_strings
-                          String datetime =
-                              // ignore: prefer_interpolation_to_compose_strings
-                              getDate(startDateTime) +
-                                  "   " +
-                                  timeStart +
-                                  " - " +
-                                  timeEnd;
-                          String avatarUrl = listBooking![index]
-                              .scheduleDetailInfo!
-                              .scheduleInfo!
-                              .tutorInfo!
-                              .avatar
-                              .toString();
-                          String name = listBooking![index]
-                              .scheduleDetailInfo!
-                              .scheduleInfo!
-                              .tutorInfo!
-                              .name
-                              .toString();
-                          String studentRequest =
-                              listBooking![index].studentRequest.toString();
-                          if (studentRequest == "null") {
-                            studentRequest = S.of(context).no_requests_for_this_class;
-                          }
-                          String detailId = listBooking![index]
-                              .id
-                              .toString();
-
-                          return _scheduleItem(startDateTime, datetime,
-                              avatarUrl, name, studentRequest, detailId, listBooking![index]);
-                        }
-                        if (index >= listBooking!.length && (loading)) {
-                          Timer(const Duration(milliseconds: 30), () {
-                            _scrollController!.jumpTo(
-                              _scrollController!.position.maxScrollExtent,
-                            );
-                          });
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          );
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  )
-                : Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.warning, color: Colors.orange, size: 48),
-                        const SizedBox(height: 8),
-                        Text(
-                          S.of(context).no_class_schedules_yet,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.warning, color: Colors.orange, size: 48),
+                  const SizedBox(height: 8),
+                  Text(
+                    S.of(context).no_class_schedules_yet,
+                    style: const TextStyle(fontSize: 20),
                   ),
-          );
+                ],
+              ),
+            ),
+    );
   }
 
-  Container _scheduleItem(DateTime startDateTime, String datetime,
-      String avatar, String name, String studentRequest, String detailId, BookingInfo nextClass) {
+  Container _scheduleItem(
+      DateTime startDateTime,
+      String datetime,
+      String avatar,
+      String name,
+      String studentRequest,
+      String detailId,
+      BookingInfo nextClass) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(16.0),
@@ -233,8 +226,8 @@ class _ScheduleState extends State<SchedulePage> {
                       onPressed: () async {
                         await ScheduleFunctions.cancelClass(detailId);
                         setState(() {
-                          listBooking!.removeWhere((element) =>
-                              element.id == detailId);
+                          listBooking!
+                              .removeWhere((element) => element.id == detailId);
                         });
                         showTopSnackBar(
                           // ignore: use_build_context_synchronously

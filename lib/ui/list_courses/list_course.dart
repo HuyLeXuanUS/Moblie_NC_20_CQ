@@ -176,11 +176,7 @@ class _ListCourseState extends State<ListCoursePage> {
           ),
         ],
       ),
-      body: loading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Scaffold(
+      body:Scaffold(
               body: listViewCourse == null || listViewCourse!.isEmpty
                   ? Center(
                       child: Column(
