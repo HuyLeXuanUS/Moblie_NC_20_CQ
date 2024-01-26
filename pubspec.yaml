@@ -54,7 +54,9 @@ dependencies:
   timer_count_down: ^2.2.2
   syncfusion_flutter_pdfviewer: ^20.4.54
   provider: ^6.1.1
-  #jitsi_meet: ^4.0.0
+  google_sign_in: ^6.1.6
+  flutter_facebook_auth: ^6.0.4
+  jitsi_meet: ^4.0.0
 
 dev_dependencies:
   flutter_test:

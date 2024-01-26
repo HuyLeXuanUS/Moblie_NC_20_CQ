@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:final_project/services/api/api_auth.dart';
 import 'package:final_project/services/models/user/user_model.dart';
 import 'package:final_project/services/share_local/token_manager.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -19,6 +21,66 @@ class LoginPage extends StatefulWidget {
 class _LoginState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  late GoogleSignIn googleSignIn = GoogleSignIn();
+
+  void handleSignInGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final String? accessToken = googleAuth?.accessToken;
+
+      if (accessToken != null) {
+        final response = await AuthFunctions.loginWithGoogle(accessToken);
+        if (response['isSuccess'] == false) {
+          setState(() {});
+        } else {
+          if (!mounted) return;
+          await TokenManager.saveToken(response['token'].toString());
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        }
+      }
+      else
+      {
+        setState(() {});
+      }
+    } catch (e) {
+      setState(() {});
+    }
+  }
+
+  void handleSingInFacebook() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        final String accessToken = result.accessToken!.token;
+        final response = await AuthFunctions.loginWithFacebook(accessToken);
+        if (response['isSuccess'] == false) {
+          setState(() {});
+        } else {
+          if (!mounted) return;
+          await TokenManager.saveToken(response['token'].toString());
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        }
+      } else {
+        setState(() {
+        });
+      }
+    } catch (e) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,40 +257,50 @@ class _LoginState extends State<LoginPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 3, 117, 210),
-                                width: 1.0,
+                          InkWell(
+                            onTap: () {
+                              handleSingInFacebook();
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color.fromARGB(255, 3, 117, 210),
+                                  width: 1.0,
+                                ),
                               ),
-                            ),
-                            child: const Icon(
-                              Icons.facebook,
-                              color: Color.fromARGB(255, 3, 117, 210),
-                              size: 40,
+                              child: const Icon(
+                                Icons.facebook,
+                                color: Color.fromARGB(255, 3, 117, 210),
+                                size: 40,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 16),
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.blue,
-                                width: 1.0,
+                          InkWell(
+                            onTap: () {
+                              handleSignInGoogle();
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.blue,
+                                  width: 1.0,
+                                ),
+                                color: null,
                               ),
-                              color: null,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/pic/icon_google.png',
-                                width: 40,
-                                height: 40,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/pic/icon_google.png',
+                                  width: 40,
+                                  height: 40,
+                                ),
                               ),
                             ),
                           ),
