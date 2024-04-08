@@ -3,7 +3,9 @@
 ## 1. Mô tả
 
 Đồ án sử dụng framework Flutter.
+
 Lập trình ứng dụng cho thuê gia sư Lettutor với các chức năng liên quan.
+
 Sử dụng API được cung cấp.
 
 ## 2. Video demo
